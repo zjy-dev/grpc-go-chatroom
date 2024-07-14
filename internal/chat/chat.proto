@@ -1,0 +1,36 @@
+// License header (if applicable)
+// File overview
+// Syntax
+// Package
+// Imports (sorted)
+// File options
+// Everything else
+
+syntax = "proto3";
+
+package chat;
+
+option go_package = "./chat";
+
+service ChatService {
+  rpc LogIn(User) returns (BaseResp);
+
+  rpc LogOut(User) returns (BaseResp);
+
+  rpc Chat(stream Message) returns (stream Message);
+}
+
+message Empty {}
+
+message BaseResp {
+  int64 code = 1; // 0 ok, else something wrong
+  string message = 2;
+}
+
+message User { string username = 1; }
+
+// 定义消息内容
+message Message {
+  string text = 1;
+  int64 timestamp = 2;
+}
