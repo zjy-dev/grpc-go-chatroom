@@ -22,8 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatServiceClient interface {
-	LogIn(ctx context.Context, in *User, opts ...grpc.CallOption) (*BaseResp, error)
-	LogOut(ctx context.Context, in *User, opts ...grpc.CallOption) (*BaseResp, error)
+	LogIn(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
+	LogOut(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 	Chat(ctx context.Context, opts ...grpc.CallOption) (ChatService_ChatClient, error)
 }
 
@@ -35,8 +35,8 @@ func NewChatServiceClient(cc grpc.ClientConnInterface) ChatServiceClient {
 	return &chatServiceClient{cc}
 }
 
-func (c *chatServiceClient) LogIn(ctx context.Context, in *User, opts ...grpc.CallOption) (*BaseResp, error) {
-	out := new(BaseResp)
+func (c *chatServiceClient) LogIn(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
+	out := new(LoginResp)
 	err := c.cc.Invoke(ctx, "/chat.ChatService/LogIn", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -44,8 +44,8 @@ func (c *chatServiceClient) LogIn(ctx context.Context, in *User, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *chatServiceClient) LogOut(ctx context.Context, in *User, opts ...grpc.CallOption) (*BaseResp, error) {
-	out := new(BaseResp)
+func (c *chatServiceClient) LogOut(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/chat.ChatService/LogOut", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -88,8 +88,8 @@ func (x *chatServiceChatClient) Recv() (*Message, error) {
 // All implementations must embed UnimplementedChatServiceServer
 // for forward compatibility
 type ChatServiceServer interface {
-	LogIn(context.Context, *User) (*BaseResp, error)
-	LogOut(context.Context, *User) (*BaseResp, error)
+	LogIn(context.Context, *LoginReq) (*LoginResp, error)
+	LogOut(context.Context, *Empty) (*Empty, error)
 	Chat(ChatService_ChatServer) error
 	mustEmbedUnimplementedChatServiceServer()
 }
@@ -98,10 +98,10 @@ type ChatServiceServer interface {
 type UnimplementedChatServiceServer struct {
 }
 
-func (UnimplementedChatServiceServer) LogIn(context.Context, *User) (*BaseResp, error) {
+func (UnimplementedChatServiceServer) LogIn(context.Context, *LoginReq) (*LoginResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogIn not implemented")
 }
-func (UnimplementedChatServiceServer) LogOut(context.Context, *User) (*BaseResp, error) {
+func (UnimplementedChatServiceServer) LogOut(context.Context, *Empty) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
 }
 func (UnimplementedChatServiceServer) Chat(ChatService_ChatServer) error {
@@ -121,7 +121,7 @@ func RegisterChatServiceServer(s grpc.ServiceRegistrar, srv ChatServiceServer) {
 }
 
 func _ChatService_LogIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(User)
+	in := new(LoginReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -133,13 +133,13 @@ func _ChatService_LogIn_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/chat.ChatService/LogIn",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServiceServer).LogIn(ctx, req.(*User))
+		return srv.(ChatServiceServer).LogIn(ctx, req.(*LoginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ChatService_LogOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(User)
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -151,7 +151,7 @@ func _ChatService_LogOut_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/chat.ChatService/LogOut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServiceServer).LogOut(ctx, req.(*User))
+		return srv.(ChatServiceServer).LogOut(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

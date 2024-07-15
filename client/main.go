@@ -7,13 +7,13 @@ import (
 	"log"
 	"time"
 
+	pb "github.com/J-Y-Zhang/grpc-go-chatroom/internal/proto"
+	"github.com/J-Y-Zhang/grpc-go-chatroom/internal/tokensource"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-
-	pb "github.com/J-Y-Zhang/grpc-go-chatroom/internal/chat"
 )
 
-func runChat(client pb.ChatServiceClient) {
+func runChat(token string, client pb.ChatServiceClient) {
 	msgs := []*pb.Message{
 		{Text: "你好"},
 		{Text: "瘦瘦耀"},
@@ -22,7 +22,10 @@ func runChat(client pb.ChatServiceClient) {
 		{Text: "42"},
 	}
 
-	stream, _ := client.Chat(context.Background())
+	stream, err := client.Chat(context.Background(), grpc.PerRPCCredentials(tokensource.New(token)))
+	if err != nil {
+		log.Fatalf("client.Chat failed: %v", err)
+	}
 
 	waitc := make(chan struct{})
 	go func() {
@@ -56,9 +59,14 @@ func runChat(client pb.ChatServiceClient) {
 }
 
 func main() {
-	var opts []grpc.DialOption
+	// Set up the credentials for the connection.
+	// perRPC := oauth.TokenSource{TokenSource: oauth2.StaticTokenSource(&oauth2.Token{
+	// 	AccessToken: "zjy",
+	// })}
 
-	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	var opts []grpc.DialOption = []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
 
 	// TODO: dynamic server ip:port
 	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", 50051), opts...)
@@ -68,5 +76,22 @@ func main() {
 	defer conn.Close()
 	client := pb.NewChatServiceClient(conn)
 
-	runChat(client)
+	// log in
+	loginResp, err := client.LogIn(context.Background(), &pb.LoginReq{
+		Username: "zjy",
+	})
+	if err != nil {
+		log.Fatalf("client.LogIn failed: %v", err)
+	}
+
+	if loginResp == nil {
+		log.Fatalf("server returned an empty response: %v", err)
+	}
+	if len(loginResp.GetToken()) == 0 {
+		log.Fatalf("server returned an empty token: %v", err)
+	}
+
+	// chat
+	runChat(loginResp.GetToken(), client)
+
 }

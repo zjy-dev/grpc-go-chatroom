@@ -13,21 +13,18 @@ package chat;
 option go_package = "./chat";
 
 service ChatService {
-  rpc LogIn(User) returns (BaseResp);
+  rpc LogIn(LoginReq) returns (LoginResp);
 
-  rpc LogOut(User) returns (BaseResp);
+  rpc LogOut(Empty) returns (Empty);
 
   rpc Chat(stream Message) returns (stream Message);
 }
 
 message Empty {}
 
-message BaseResp {
-  int64 code = 1; // 0 ok, else something wrong
-  string message = 2;
-}
+message LoginReq { string username = 1; }
 
-message User { string username = 1; }
+message LoginResp { string token = 2; }
 
 // 定义消息内容
 message Message {
