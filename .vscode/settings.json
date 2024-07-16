@@ -1,8 +1,0 @@
-{
-  "docify.translateService.targetLanguage": "Chinese",
-  "docify.translateService.docstringFormat": "Google",
-  "docify.commentService.docstringFormat": "Google",
-  "docify.commentService.autoTranslationService": "English",
-  "docify.commentService.sidePanelReviewMode": true,
-  "docwriter.style": "GoDoc"
-}
