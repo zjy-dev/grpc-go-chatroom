@@ -1,8 +1,9 @@
 -include .env
 .PHONY: proto
 proto:
-	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-	internal/chat/chat.proto
+	@protoc --go_out=. --go_opt=paths=source_relative \
+		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+		internal/proto/chat.proto
 
 .PHONY: clean
 clean:
@@ -12,5 +13,7 @@ clean:
 server:
 	go run server/main.go
 .PHONY: client
+
+name := ""
 client:
-	go run client/main.go
+	go run client/main.go -n=${name}
