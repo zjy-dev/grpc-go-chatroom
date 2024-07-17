@@ -9,12 +9,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/J-Y-Zhang/grpc-go-chatroom/internal/tokensource"
 	"github.com/urfave/cli/v2"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/tokensource"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	pb "github.com/J-Y-Zhang/grpc-go-chatroom/internal/proto"
+	pb "github.com/zjy-dev/grpc-go-chatroom/internal/proto"
 )
 
 var (

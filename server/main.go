@@ -9,15 +9,15 @@ import (
 	"os"
 	"sync"
 
-	"github.com/J-Y-Zhang/grpc-go-chatroom/internal/jwt"
-	"github.com/J-Y-Zhang/grpc-go-chatroom/internal/middlewares"
 	"github.com/urfave/cli/v2"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/jwt"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/middlewares"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/J-Y-Zhang/grpc-go-chatroom/internal/proto"
 	authmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
+	pb "github.com/zjy-dev/grpc-go-chatroom/internal/proto"
 )
 
 var port int64
@@ -27,8 +27,7 @@ type chatServer struct {
 	pb.UnimplementedChatServiceServer // UnimplementedChatServiceServer is the server API for ChatService service.
 
 	clientsMap map[string]pb.ChatService_ChatServer // username -> client stream
-
-	mu sync.Mutex // mu guards the clientsMap
+	mu         sync.Mutex                           // mu guards the clientsMap
 }
 
 // LogIn is a method that implements the LogIn method of the ChatServiceServer interface.
@@ -37,7 +36,7 @@ func (cs *chatServer) LogIn(ctx context.Context, req *pb.LoginReq) (*pb.LoginRes
 	// Check if the username is empty.
 	if req.GetUsername() == "" {
 
-		return &pb.LoginResp{}, status.Errorf(codes.InvalidArgument, "username is empty")
+		return nil, status.Errorf(codes.InvalidArgument, "username is empty")
 	}
 
 	// Lock the mutex to prevent concurrent access to the clientsMap.
@@ -47,14 +46,14 @@ func (cs *chatServer) LogIn(ctx context.Context, req *pb.LoginReq) (*pb.LoginRes
 	// Check if the user has already logged in.
 	if _, ok := cs.clientsMap[req.GetUsername()]; ok {
 
-		return &pb.LoginResp{}, status.Errorf(codes.AlreadyExists, "user: %s has already logged in", req.GetUsername())
+		return nil, status.Errorf(codes.AlreadyExists, "user: %s has already logged in", req.GetUsername())
 	}
 
 	// Generate a JWT token for the user.
 	token, err := jwt.GenerateJwt(req.GetUsername())
 	if err != nil {
 
-		return &pb.LoginResp{}, status.Errorf(codes.Internal, "failed to generate jwt: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to generate jwt: %v", err)
 	}
 
 	// Add the user to the clientsMap.
@@ -97,12 +96,19 @@ func (cs *chatServer) Chat(stream pb.ChatService_ChatServer) error {
 		return status.Errorf(codes.NotFound, "user: %s has not logged in, please log in first", username)
 	}
 	// Add the user to the clientsMap.
+
 	cs.clientsMap[username] = stream
+
 	cs.mu.Unlock()
 	for {
 		// Receive message from client
 		msg, err := stream.Recv()
-
+		if err != io.EOF && msg == nil {
+			cs.mu.Lock()
+			delete(cs.clientsMap, username)
+			cs.mu.Unlock()
+			return status.Errorf(codes.InvalidArgument, "empty message")
+		}
 		if err != nil {
 			cs.mu.Lock()
 			delete(cs.clientsMap, username)
@@ -114,49 +120,26 @@ func (cs *chatServer) Chat(stream pb.ChatService_ChatServer) error {
 		}
 
 		// Send message to all clients
-		msg.Text = fmt.Sprintf("%s: %s", username, msg.Text)
-		go func(msg *pb.Message) {
-			cs.mu.Lock()
-			defer cs.mu.Unlock()
-			for _, client := range cs.clientsMap {
-				if err := client.Send(msg); err != nil {
+		// TODO: CHECK TIMESTAMP
+		newMsg := &pb.Message{Text: fmt.Sprintf("%s: %s", username, msg.Text), Timestamp: msg.GetTimestamp()}
+		cs.mu.Lock()
+		for _, client := range cs.clientsMap {
+			go func() {
+				if err := client.Send(newMsg); err != nil {
 					log.Printf("failed to send message to client: %v", err)
 				}
-			}
-		}(msg)
+			}()
 
+			cs.mu.Unlock()
+
+		}
 	}
 }
 
-// newServer creates a new chatServer instance.
-func newServer() *chatServer {
+// newChatServer creates a new chatServer instance.
+func newChatServer() *chatServer {
 	s := &chatServer{clientsMap: make(map[string]pb.ChatService_ChatServer)}
 	return s
-}
-
-// authFunc is a function that authenticates incoming requests.
-func authFunc(ctx context.Context) (context.Context, error) {
-	// Get the token from the metadata.
-	token, err := authmiddleware.AuthFromMD(ctx, "bearer")
-
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
-	}
-
-	// Parse the token.
-	claims, err := jwt.ParseJwt(token)
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
-	}
-	// Get the subject from the claims.
-	subject, err := claims.GetSubject()
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "invalid auth token: %v", err)
-	}
-
-	fmt.Println("subject: ", subject)
-	// TODO:
-	return context.WithValue(ctx, "username", subject), nil
 }
 
 func main() {
@@ -179,11 +162,11 @@ func main() {
 				grpc.StreamInterceptor(authmiddleware.StreamServerInterceptor(authFunc)),
 				// Set the unary interceptor to authenticate incoming unary requests.
 				// Exclude the "LogIn" method from authentication.
-				grpc.UnaryInterceptor(middlewares.UnaryServerInterceptorWithBypassMethods(authFunc, "LogIn")),
+				grpc.UnaryInterceptor(middlewares.UnaryServerAuthInterceptorWithBypassMethods(authFunc, "LogIn")),
 			)
 
 			// Register the chat service server with the gRPC server.
-			pb.RegisterChatServiceServer(grpcServer, newServer())
+			pb.RegisterChatServiceServer(grpcServer, newChatServer())
 
 			// Start the server and serve the chat requests.
 			grpcServer.Serve(lis)

@@ -24,3 +24,5 @@ go.work.sum
 .vscode/
 
 .env
+
+prompt

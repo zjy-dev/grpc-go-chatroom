@@ -1,75 +1,131 @@
 package jwt
 
 import (
-	"reflect"
+	"os"
 	"testing"
 
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
+func TestLoadJwtKey(t *testing.T) {
+	require := require.New(t)
+	testJWTKey := "zjy-dev"
+
+	require.Panics(mustLoadJwtKey)
+
+	// Test when JWT_KEY environment variable is set
+	os.Setenv("JWT_KEY", testJWTKey)
+	mustLoadJwtKey()
+	require.Equal(testJWTKey, jwtKey)
+
+	// Test when JWT_KEY environment variable is not set
+	os.Unsetenv("JWT_KEY")
+	require.Equal("", os.Getenv("JWT_KEY"))
+	jwtKey = ""
+
+	os.WriteFile(".env", []byte("JWT_KEY="+testJWTKey+"-file"), 0644)
+	t.Cleanup(func() {
+		os.Unsetenv("JWT_KEY")
+		require.Equal("", os.Getenv("JWT_KEY"))
+		require.Nil(os.Remove(".env"))
+	})
+	mustLoadJwtKey()
+	require.Equal(testJWTKey+"-file", jwtKey)
+}
+
+func mustLoadJwtKeyHelper(t *testing.T) {
+	t.Helper()
+	testJWTKey := "zjy-dev"
+	os.Setenv("JWT_KEY", testJWTKey)
+	mustLoadJwtKey()
+	require.Equal(t, testJWTKey, jwtKey)
+}
+
+// TODO: ADD TEST CASEs
+
 func TestGenerateJwt(t *testing.T) {
-	type args struct {
-		username string
-	}
+	mustLoadJwtKeyHelper(t)
+	require := require.New(t)
+	t.Cleanup(func() {
+		os.Unsetenv("JWT_KEY")
+		require.Equal("", os.Getenv("JWT_KEY"))
+	})
 	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
+		name     string
+		username string
+		wantCode codes.Code
 	}{
 		{
-			name:    "Empty Username",
-			args:    args{username: ""},
-			wantErr: false,
+			name:     "ValidUsername",
+			username: "testuser",
+			wantCode: codes.OK,
 		},
 		{
-			name:    "Non-empty Username",
-			args:    args{username: "testUser"},
-			wantErr: false,
+			name:     "EmptyUsername",
+			username: "",
+			wantCode: codes.InvalidArgument,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			token, err := GenerateJwt(tt.args.username)
-			t.Logf("Generated jwt: %s", token)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GenerateJwt() error = %v, wantErr %v", err, tt.wantErr)
+			token, err := GenerateJwt(tt.username)
+			if tt.wantCode != codes.OK {
+				require.Error(err)
+				require.Equal(tt.wantCode, status.Code(err))
+			} else {
+				require.NoError(err)
+				require.NotEmpty(t, token)
 			}
 		})
 	}
 }
 
 func TestParseJwt(t *testing.T) {
-	validUsername1 := "xiaoxinzi"
-	validToken1, err := GenerateJwt(validUsername1)
-	if err != nil {
-		t.Fatalf("GenerateJwt() error = %v", err)
-	}
-	type args struct {
-		tokenString string
-	}
+	mustLoadJwtKeyHelper(t)
+	require := require.New(t)
+	t.Cleanup(func() {
+		os.Unsetenv("JWT_KEY")
+		require.Equal("", os.Getenv("JWT_KEY"))
+	})
+	username := "zjy-dev"
+	validToken, err := GenerateJwt(username)
+	require.NoError(err)
+
 	tests := []struct {
-		name    string
-		args    args
-		want    *jwt.RegisteredClaims
-		wantErr bool
+		name     string
+		token    string
+		wantCode codes.Code
 	}{
 		{
-			name:    "Valid token",
-			args:    args{tokenString: validToken1},
-			want:    &jwt.RegisteredClaims{Subject: validUsername1},
-			wantErr: false,
+			name:     "ValidToken",
+			token:    validToken,
+			wantCode: codes.OK,
+		},
+		{
+			name:     "EmptyToken",
+			token:    "",
+			wantCode: codes.InvalidArgument,
+		},
+		{
+			name:     "InvalidToken",
+			token:    "invalidtoken",
+			wantCode: codes.InvalidArgument,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ParseJwt(tt.args.tokenString)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ParseJwt() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ParseJwt() = %v, want %v", got, tt.want)
+			claims, err := ParseJwt(tt.token)
+			if tt.wantCode != codes.OK {
+				require.Error(err)
+				require.Nil(claims)
+			} else {
+				require.NoError(err)
+				require.NotNil(claims)
+				require.Equal(username, claims.Subject)
 			}
 		})
 	}
