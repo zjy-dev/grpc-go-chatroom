@@ -46,31 +46,56 @@
 
 ## :dart: About ##
 
-Describe your project
+A **learning-purpose** chatroom built with [gRPC-go](https://github.com/grpc/grpc-go), integrates many **modern** software engineering toolchains, and conforms to the [Google Go StyleGuide](https://google.github.io/styleguide/go/)
+
+Even the **README itself** is part of my learning for software-engineering specifications, cool, right?
+
+I'll write everything I learned **(and also the source I've learned them!!!)** below, if you are new to both gRPC-go and software-engineering, definitely check out.
+
 
 ## :sparkles: Features ##
 
-:heavy_check_mark: Feature 1;\
-:heavy_check_mark: Feature 2;\
-:heavy_check_mark: Feature 3;
+:heavy_check_mark: **Auth**: Use [JWT for Go](https://github.com/golang-jwt/jwt).\
+:heavy_check_mark: **Continuous Integration**: Use **Github Actions** to automatically build and test.\
+:heavy_check_mark: **Testing**: Use [Testify](https://github.com/stretchr/testify) for *assertions and mocks*.\
+:heavy_check_mark: **Building**: Use [Makefile](https://makefiletutorial.com/), which is the best building tool for go projects.
 
 ## :rocket: Technologies ##
 
 The following tools were used in this project:
 
-- [Expo](https://expo.io/)
-- [Node.js](https://nodejs.org/en/)
-- [React](https://pt-br.reactjs.org/)
-- [React Native](https://reactnative.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-
+- [gRPC-go](https://expo.io/)
+- [gRPC-go-middleware](https://github.com/grpc-ecosystem/go-grpc-middleware)
+- [testify](https://github.com/stretchr/testify)
+- [jwt](https://github.com/golang-jwt/jwt)
+- [Makefile](https://makefiletutorial.com/)
+- [github actions](https://www.bilibili.com/video/BV1aT421y7Ar)
+- to add more...
 ## :white_check_mark: Requirements ##
 
-Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
+Clone the repo to your local environment and download require packages. 
+```bash
+$ git clone https://github.com/zjy-dev/grpc-go-chatroom.git
+
+$ cd grpc-go-chatroom && go mod tidy
+```
 
 ## :checkered_flag: Starting ##
 
 
+First, run the server in one terminal:
+```bash
+$ make server
+```
+
+Finally, run the client in another terminal:
+```bash
+$ make client name="YOURNAME"
+```
+
+After the client successfully connected to the server, you can inputting messages in the terminal and press enter to shoot it.
+
+You can also run multiple clients to chat with each other!
 
 ## :memo: License ##
 
