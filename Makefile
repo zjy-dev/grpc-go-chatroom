@@ -17,3 +17,15 @@ server:
 name := ""
 client:
 	go run client/main.go -n=${name}
+
+coverage:
+	# TODO: Make this more graceful
+	@go clean -testcache
+	go test -cover ./server ./internal/jwt ./internal/tokensource ./internal/middlewares
+
+coverage-html:
+	@go clean -testcache && rm -f ./all.coverage.out
+	@go test -coverprofile=./all.coverage.out ./...
+	@go tool cover -html=./all.coverage.out -o ./coverage.html
+	@rm -f ./all.coverage.out
+	@echo "Coverage report generated! Open ./coverage.html in your browser to view it." 
