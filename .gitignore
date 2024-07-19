@@ -27,4 +27,10 @@ go.work.sum
 
 prompt
 
+server/grpc-go-chatroom-server
+
+client/grpc-go-chatroom-client
+
 *.cover.out
+
+*.html

@@ -11,13 +11,22 @@ clean:
 
 .PHONY: server
 server:
-	go run server/main.go
+	go run server/auth.go server/main.go
 .PHONY: client
 
 name := ""
 client:
-	go run client/main.go -n=${name}
+	@go run client/main.go -n=${name}
 
+build:
+	@go build -o grpc-go-chatroom-server ./server
+	@go build -o grpc-go-chatroom-client ./client 
+	@echo "Now check ./server and ./client for binaries!"
+
+install:
+	# TODO
+test:
+	go test ./...
 coverage:
 	# TODO: Make this more graceful
 	@go clean -testcache

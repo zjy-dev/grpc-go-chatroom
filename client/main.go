@@ -77,6 +77,7 @@ func runChat(client pb.ChatServiceClient) {
 
 	// Create a scanner to read from standard input
 	scanner := bufio.NewScanner(os.Stdin)
+
 	for scanner.Scan() {
 		// Create a message to send to the server
 		msg := &pb.Message{
@@ -89,7 +90,6 @@ func runChat(client pb.ChatServiceClient) {
 		if err != nil {
 			log.Fatalf("%v.Send(%v) = %v", client, msg, err)
 		}
-		time.Sleep(time.Second * 1)
 	}
 
 	// Check if there was an error reading from standard input
@@ -137,6 +137,8 @@ func main() {
 			// Log in the user to the chatroom
 			mustLogin(client)
 
+			fmt.Printf("Hello, %s! Welcome to the chatroom!\n", username)
+			fmt.Println("Input your message and hit enter to shoot it, and havvvve a nice chat!")
 			// Run the chatroom
 			runChat(client)
 			return nil

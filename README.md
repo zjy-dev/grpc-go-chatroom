@@ -46,7 +46,9 @@
 
 ## :dart: About ##
 
-A **learning-purpose** chatroom built with [gRPC-go](https://github.com/grpc/grpc-go), integrates many **modern** software engineering toolchains, and conforms to the [Google Go StyleGuide](https://google.github.io/styleguide/go/)
+A **learning-purpose** chatroom built with [gRPC-go](https://github.com/grpc/grpc-go), integrates **modern** development toolchain.
+
+The every **development process**(e.g.commit messages) conforms to corresponding specifications, and particularly the code conforms to the [Google Go StyleGuide](https://google.github.io/styleguide/go/).
 
 Even the **README itself** is part of my learning for software-engineering specifications, cool, right?
 
@@ -55,10 +57,11 @@ I'll write everything I learned **(and also the source I've learned them!!!)** b
 
 ## :sparkles: Features ##
 
-:heavy_check_mark: **Auth**: Use [JWT for Go](https://github.com/golang-jwt/jwt).\
-:heavy_check_mark: **Continuous Integration**: Use **Github Actions** to automatically build and test.\
-:heavy_check_mark: **Testing**: Use [Testify](https://github.com/stretchr/testify) for *assertions and mocks*.\
-:heavy_check_mark: **Building**: Use [Makefile](https://makefiletutorial.com/), which is the best building tool for go projects.
+:heavy_check_mark: **Auth**: Use *jwt* to manage user log in/out.\
+:heavy_check_mark: **Continuous Integration**: Use *Github Actions* to automatically build and test.\
+:heavy_check_mark: **Command Line**: Use *urfave/cli* to build CLI interface.\
+:heavy_check_mark: **Testing**: Use *Testify* for *assertions and mocks*.\
+:heavy_check_mark: **Building**: Use *Makefile*, which is the best building tool for go projects.
 
 ## :rocket: Technologies ##
 
@@ -68,6 +71,7 @@ The following tools were used in this project:
 - [gRPC-go-middleware](https://github.com/grpc-ecosystem/go-grpc-middleware)
 - [testify](https://github.com/stretchr/testify)
 - [jwt](https://github.com/golang-jwt/jwt)
+- [urfave/cli](https://github.com/urfave/cli)
 - [Makefile](https://makefiletutorial.com/)
 - [github actions](https://www.bilibili.com/video/BV1aT421y7Ar)
 - to add more...
@@ -79,23 +83,45 @@ $ git clone https://github.com/zjy-dev/grpc-go-chatroom.git
 
 $ cd grpc-go-chatroom && go mod tidy
 ```
-
 ## :checkered_flag: Starting ##
-
 
 First, run the server in one terminal:
 ```bash
 $ make server
 ```
+![alt text](.github/imgs/server.png)
 
-Finally, run the client in another terminal:
+Then, run the client in another terminal, remember specify YOURNAME:
 ```bash
 $ make client name="YOURNAME"
 ```
 
 After the client successfully connected to the server, you can inputting messages in the terminal and press enter to shoot it.
+![alt text](.github/imgs/client.png)
 
 You can also run multiple clients to chat with each other!
+
+## ✅ Testing ##
+
+You can test everything in one command below:
+```bash
+$ make test 
+``` 
+
+## 📊 Coverage ##
+
+You can see coverage in CLI using below command:
+```bash
+$ make coverage
+```
+
+Or if you want a html version that displays whether every-single-word in the code has been covered, use following command:
+```bash
+$ make coverage-html
+```
+Then coverage.html will appear in your root directory, and looks just like below img, check it out! 
+![alt text](.github/imgs/coverage.png)
+
 
 ## :memo: License ##
 

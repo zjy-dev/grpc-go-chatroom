@@ -168,6 +168,7 @@ func main() {
 			// Register the chat service server with the gRPC server.
 			pb.RegisterChatServiceServer(grpcServer, newChatServer())
 
+			fmt.Printf("Server will listen on %s, now start the client(s)\n", fmt.Sprintf("0.0.0.0:%d", port))
 			// Start the server and serve the chat requests.
 			grpcServer.Serve(lis)
 			return nil
