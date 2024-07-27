@@ -21,16 +21,20 @@
 go.work
 go.work.sum
 
+# IDE file
 .vscode/
 
+# Binarys
+bin/
+
+# Environment files
 .env
 
-prompt
+# AI prompts
+prompt/
 
-server/grpc-go-chatroom-server
-
-client/grpc-go-chatroom-client
-
+# Coverage file
 *.cover.out
 
+# Coverage report file
 *.html

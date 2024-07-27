@@ -7,7 +7,7 @@ proto:
 
 .PHONY: clean
 clean:
-	rm -rf internal/chat/chat.pb.go internal/chat/chat_grpc.pb.go
+	rm -rf ./bin/*
 
 .PHONY: server
 server:
@@ -15,23 +15,34 @@ server:
 .PHONY: client
 
 name := ""
+.PHONY: client
 client:
 	@go run client/main.go -n=${name}
 
+.PHONY: build
 build:
-	@go build -o grpc-go-chatroom-server ./server
-	@go build -o grpc-go-chatroom-client ./client 
-	@echo "Now check ./server and ./client for binaries!"
+	@mkdir -p ./bin
+	@go build -o ./bin/grpc-go-chatroom-server ./server
+	@echo "Server built!"
+	@go build -o ./bin/grpc-go-chatroom-client ./client 
+	@echo "Client built!"
+	@echo "Now check ./bin for binaries!"
 
+.PHONY: install
 install:
 	# TODO
+
+.PHONY: test
 test:
 	go test ./...
+
+.PHONY: coverage
 coverage:
 	# TODO: Make this more graceful
 	@go clean -testcache
 	go test -cover ./server ./internal/jwt ./internal/tokensource ./internal/middlewares
 
+.PHONY: coverage-html
 coverage-html:
 	@go clean -testcache && rm -f ./all.coverage.out
 	@go test -coverprofile=./all.coverage.out ./...
