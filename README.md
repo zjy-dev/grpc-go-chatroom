@@ -6,7 +6,7 @@
   <!-- <a href="https://grpcgochatroom.netlify.app">Demo</a> -->
 </div>
 
-<h1 align="center">Grpc Go Chatroom</h1>
+<h1 align="center">gRPC-Go Chatroom</h1>
 
 <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/zjy-dev/grpc-go-chatroom?color=56BEB8">
@@ -43,6 +43,8 @@
 </p>
 
 <br>
+
+**Note: This branch uses bidirectional streaming of gRPC, but this is currently not supproted by [gRPC-Web](https://github.com/grpc/grpc-web) which I want to use to build my web frontend, so I'll refactor the code of this branch to use just server-side streaming, and this branch will be reserved forever!**
 
 ## :dart: About ##
 
