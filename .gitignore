@@ -37,4 +37,4 @@ prompt/
 *.cover.out
 
 # Coverage report file
-*.html
+coverage.html
