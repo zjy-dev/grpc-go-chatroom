@@ -42,6 +42,7 @@ func GenerateJwt(username string) (string, error) {
 	// Check if the jwtKey variable is already set
 	if jwtKey == "" {
 		mustLoadJwtKey()
+		log.Printf("jwtKey: %s", jwtKey)
 	}
 
 	// Create a new JWT token with the given username

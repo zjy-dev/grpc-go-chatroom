@@ -47,12 +47,16 @@ func mustLogin(client pb.ChatServiceClient) {
 	token = loginResp.GetToken()
 }
 
-// runChat function runs the chatroom
-func runChat(client pb.ChatServiceClient) {
+// chat
+func chat(client pb.ChatServiceClient) {
+	if len(token) == 0 {
+		log.Panicln("no token found")
+	}
+
 	// Create a stream to the server
 	stream, err := client.Chat(context.Background(), grpc.PerRPCCredentials(tokensource.New(token)))
 	if err != nil {
-		log.Fatalf("client.Chat failed: %v", err)
+		log.Panicf("client.Chat failed: %v\n", err)
 	}
 
 	// Create a channel to wait for the server to send a message
@@ -61,17 +65,17 @@ func runChat(client pb.ChatServiceClient) {
 	// Start a goroutine to receive messages from the server
 	go func() {
 		for {
-			in, err := stream.Recv()
+			msg, err := stream.Recv()
 			if err == io.EOF {
 				close(waitc)
 				return
 			}
 			if err != nil {
-				log.Fatalf("client.RouteChat failed: %v", err)
+				log.Fatalf("failed to receive from server: %v", err)
 			}
 
 			// Print the message from the server
-			fmt.Printf("[%s] %s\n", time.Unix(in.GetTimestamp(), 0).Format("2006-01-02 15:04:05"), in.GetText())
+			fmt.Printf("[%s] %s\n", time.Unix(msg.GetTimestamp(), 0).Format("2006-01-02 15:04:05"), msg.GetText())
 		}
 	}()
 
@@ -110,10 +114,11 @@ func mustNewClient() (*grpc.ClientConn, pb.ChatServiceClient) {
 	// Create a new client connection to the server
 	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", port),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
 
+	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
+	fmt.Println("connected to server")
 
 	// Return the connection and client
 	return conn, pb.NewChatServiceClient(conn)
@@ -124,8 +129,8 @@ func main() {
 
 	// Create a new cli app
 	chatroomClient := &cli.App{
-		Name:  "grpc-go-chatroom client",
-		Usage: "grpc-go chatroom client, written for learning purposes",
+		Name:  "gRPC-go-chatroom client",
+		Usage: "gRPC-go chatroom client, written for learning purposes",
 
 		// Define the action to be taken when the app is run
 		Action: func(cCtx *cli.Context) error {
@@ -137,10 +142,12 @@ func main() {
 			// Log in the user to the chatroom
 			mustLogin(client)
 
+			fmt.Println(token)
+
 			fmt.Printf("Hello, %s! Welcome to the chatroom!\n", username)
 			fmt.Println("Input your message and hit enter to shoot it, and havvvve a nice chat!")
 			// Run the chatroom
-			runChat(client)
+			chat(client)
 			return nil
 		},
 		// Define the flags for the app
@@ -149,7 +156,7 @@ func main() {
 			&cli.Int64Flag{
 				Name:        "port",
 				Aliases:     []string{"p"},
-				Value:       50051,
+				Value:       50053,
 				Usage:       "the server port",
 				Destination: &port,
 			},

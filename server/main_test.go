@@ -87,14 +87,14 @@ func TestLogOut(t *testing.T) {
 	tests := []struct {
 		name       string
 		username   string
-		setupFunc  func(cs *chatServer) context.Context
+		setupFunc  func(cs *chatServiceServer) context.Context
 		wantErr    bool
 		wantErrMsg string
 	}{
 		{
 			name:     "Successful Logout",
 			username: "testuser",
-			setupFunc: func(cs *chatServer) context.Context {
+			setupFunc: func(cs *chatServiceServer) context.Context {
 				cs.clientsMap["testuser"] = nil
 				return context.WithValue(context.Background(), "username", "testuser")
 			},
@@ -103,7 +103,7 @@ func TestLogOut(t *testing.T) {
 		{
 			name:     "Invalid Auth Token",
 			username: "",
-			setupFunc: func(cs *chatServer) context.Context {
+			setupFunc: func(cs *chatServiceServer) context.Context {
 				return context.Background()
 			},
 			wantErr:    true,
@@ -112,7 +112,7 @@ func TestLogOut(t *testing.T) {
 		{
 			name:     "User Not Found",
 			username: "nonexistent",
-			setupFunc: func(cs *chatServer) context.Context {
+			setupFunc: func(cs *chatServiceServer) context.Context {
 				return context.WithValue(context.Background(), "username", "nonexistent")
 			},
 			wantErr:    true,
@@ -177,7 +177,7 @@ func TestChat(t *testing.T) {
 	tests := []struct {
 		name        string
 		recvMsgs    []*pb.Message
-		setupFunc   func(cs *chatServer)
+		setupFunc   func(cs *chatServiceServer)
 		wantErr     bool
 		wantErrCode codes.Code
 		tokenValid  bool
@@ -188,7 +188,7 @@ func TestChat(t *testing.T) {
 				{Text: "Hello"},
 				{Text: "How are you?"},
 			},
-			setupFunc: func(cs *chatServer) {
+			setupFunc: func(cs *chatServiceServer) {
 				cs.clientsMap["testuser"] = nil
 			},
 			wantErr:    false,
@@ -197,7 +197,7 @@ func TestChat(t *testing.T) {
 		{
 			name:     "InvalidAuthToken",
 			recvMsgs: []*pb.Message{},
-			setupFunc: func(cs *chatServer) {
+			setupFunc: func(cs *chatServiceServer) {
 				// No setup needed
 			},
 			wantErr:     true,
@@ -207,7 +207,7 @@ func TestChat(t *testing.T) {
 		{
 			name:     "UserNotLoggedIn",
 			recvMsgs: []*pb.Message{},
-			setupFunc: func(cs *chatServer) {
+			setupFunc: func(cs *chatServiceServer) {
 				// No setup needed
 			},
 			wantErr:     true,
@@ -220,7 +220,7 @@ func TestChat(t *testing.T) {
 				{Text: "Hello"},
 				nil,
 			},
-			setupFunc: func(cs *chatServer) {
+			setupFunc: func(cs *chatServiceServer) {
 				cs.clientsMap["testuser"] = nil
 			},
 			wantErr:     true,
