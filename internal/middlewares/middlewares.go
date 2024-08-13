@@ -4,7 +4,9 @@ import (
 	"context"
 	"strings"
 
+	"github.com/zjy-dev/grpc-go-chatroom/internal/utils"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 )
 
 type AuthFunc func(ctx context.Context) (context.Context, error)
@@ -29,7 +31,7 @@ func UnaryServerAuthInterceptorWithBypassMethods(authFunc AuthFunc, bypassMethod
 		// If the method isn't in the bypass list, call authFunc and then call the handler.
 		ctx, err := authFunc(ctx)
 		if err != nil {
-			return nil, err
+			return nil, utils.WrapGRPCError(err, codes.Unauthenticated, "authentication failed")
 		}
 		return handler(ctx, req)
 	}

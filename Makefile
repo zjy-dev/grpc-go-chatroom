@@ -1,22 +1,24 @@
 -include .env
 
 BINART_PATH	:= ./bin
-PROTO_PATH := ./internal/proto
+PROTO_PATH := ./api/chat/v1
 SERVER_PATH = ./server
+BUF_PATH = ./api
 .PHONY: deps
 deps:
 	go mod tidy
-	cd ${PROTO_PATH} && buf dep update
+	cd ${BUF_PATH} && buf dep update
 
 
 .PHONY: proto
 proto:
-	cd ${PROTO_PATH} && buf generate
+	cd ${BUF_PATH} && buf generate
 
 .PHONY: clean
 clean:
 	rm -rf ${BINART_PATH}/*
 	rm -rf ${PROTO_PATH}/*.pb*go
+	rm -rf ${PROTO_PATH}/*.swagger.json
 
 .PHONY: run-server
 SERVER_SOURCES := $(shell find ${SERVER_PATH} -type f ! -name '*_test.go')
@@ -42,20 +44,24 @@ build:
 install:
 	# TODO
 
-.PHONY: test
-test:
-	go test ./...
+.PHONY: unit-test
+unit-test:
+	go test -v -tags="unit_test" ./...
+
+.PHONY: integration-test
+integration-test:
+	go test -v -tags="integration_test" ./...
 
 .PHONY: coverage
 coverage:
 	# TODO: Make this more graceful
 	@go clean -testcache
-	go test -cover ./server ./internal/jwt ./internal/tokensource ./internal/middlewares
+	go test -tags="unit_test" -cover ./server ./internal/*
 
 .PHONY: coverage-html
 coverage-html:
 	@go clean -testcache && rm -f ./all.coverage.out
-	@go test -coverprofile=./all.coverage.out ./...
+	@go test -tags="unit_test" -coverprofile=./all.coverage.out ./...
 	@go tool cover -html=./all.coverage.out -o ./coverage.html
 	@rm -f ./all.coverage.out
 	@echo "Coverage report generated! Open ./coverage.html in your browser to view it." 

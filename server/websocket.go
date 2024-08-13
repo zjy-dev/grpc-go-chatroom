@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	pb "github.com/zjy-dev/grpc-go-chatroom/internal/proto"
+	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/tokensource"
 
 	"github.com/gorilla/websocket"
@@ -16,7 +16,6 @@ import (
 )
 
 var (
-	token    string
 	upgrader websocket.Upgrader = websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
@@ -68,7 +67,6 @@ func (s *WebSocketServer) handleWebSocket(w http.ResponseWriter, r *http.Request
 		return
 	}
 	defer func() {
-		ws.WriteJSON(&pb.Message{Text: "bye", Timestamp: 0})
 		ws.Close()
 	}()
 
@@ -95,13 +93,13 @@ func (s *WebSocketServer) handleWebSocket(w http.ResponseWriter, r *http.Request
 	}()
 
 	for {
-		var msg pb.Message
-		err := ws.ReadJSON(&msg)
+		var req pb.ChatRequest
+		err := ws.ReadJSON(&req)
 		if err != nil {
 			log.Printf("failed to read from websocket: %v", err)
 			break
 		}
-		err = stream.Send(&msg)
+		err = stream.Send(&req)
 		if err != nil {
 			log.Printf("failed to send to gRPC stream: %v", err)
 			break

@@ -1,0 +1,222 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "chat/v1/chat.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ChatService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Log in to the chatroom",
+        "description": "Very simple log in interface, it takes a username and returns a JWT token.",
+        "operationId": "ChatService_LogIn",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LogInResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "LoginReq is the request message for LogIn, include a not empty username.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1LogInRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ChatService"
+        ],
+        "security": []
+      }
+    },
+    "/logout": {
+      "post": {
+        "summary": "Log out from the chatroom",
+        "description": "Must carry a JWT token in header.\nReturn nothing, client should close the websocket or grpc connection after calling this.",
+        "operationId": "ChatService_LogOut",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LogOutResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1LogOutRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ChatService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1ChatResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/v1Message"
+        }
+      }
+    },
+    "v1LogInRequest": {
+      "type": "object",
+      "example": {
+        "username": "Alice"
+      },
+      "properties": {
+        "username": {
+          "type": "string"
+        }
+      },
+      "description": "LoginReq is the request message for LogIn, include a not empty username.",
+      "title": "LoginReq",
+      "required": [
+        "username"
+      ]
+    },
+    "v1LogInResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "The JWT token, encoded username in it"
+        }
+      },
+      "description": "LoginResp is the response message for LogIn, include a not empty JWT token which encoded username in it.",
+      "required": [
+        "token"
+      ]
+    },
+    "v1LogOutRequest": {
+      "type": "object"
+    },
+    "v1LogOutResponse": {
+      "type": "object"
+    },
+    "v1Message": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/v1MessageType",
+          "description": "The type of the message"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "int64",
+          "description": "Timestamp when the user sent the message locally"
+        },
+        "textContent": {
+          "type": "string",
+          "description": "The content of the message."
+        },
+        "binaryContent": {
+          "type": "string",
+          "format": "byte",
+          "description": "The content of the message."
+        },
+        "username": {
+          "type": "string",
+          "description": "This message onwer's username."
+        },
+        "messageNumber": {
+          "type": "string",
+          "format": "uint64",
+          "description": "The message number of the message, start from 0 and increase by 1 per message."
+        }
+      },
+      "description": "Chat room message",
+      "required": [
+        "type",
+        "timestamp"
+      ]
+    },
+    "v1MessageType": {
+      "type": "string",
+      "enum": [
+        "MESSAGE_TYPE_UNSPECIFIED",
+        "MESSAGE_TYPE_USERENTER",
+        "MESSAGE_TYPE_USERLEAVE",
+        "MESSAGE_TYPE_NORMAL"
+      ],
+      "default": "MESSAGE_TYPE_UNSPECIFIED"
+    }
+  },
+  "securityDefinitions": {
+    "jwt": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "jwt": []
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 // "user strict";
 let wsocket;
 let token = "";
-const SERVER_IP = "localhost";
-const SERVER_PORT = "8082";
+const SERVER_IP = "139.196.93.196";
+const SERVER_PORT = "8080";
 function login() {
   const username = document.getElementById("username").value;
   if (!username) {

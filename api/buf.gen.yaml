@@ -1,0 +1,15 @@
+version: v2
+plugins:
+  - remote: buf.build/protocolbuffers/go
+    out: . 
+    # If `paths=source_relative` not set, final path is ${out}/${go_package}
+    # if set, final path is ${out}/${PATH TO PROTO FILE}
+    opt: paths=source_relative
+  - remote: buf.build/grpc/go
+    out: .
+    opt: paths=source_relative
+  - remote: buf.build/grpc-ecosystem/gateway
+    out: .
+    opt: paths=source_relative
+  - remote: buf.build/grpc-ecosystem/openapiv2
+    out: .

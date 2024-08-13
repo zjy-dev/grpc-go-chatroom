@@ -6,23 +6,31 @@ import (
 	"net/http"
 	"strings"
 
+	authmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
 	"github.com/spf13/viper"
+	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/middlewares"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/service"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/utils"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
-
-	authmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
-	pb "github.com/zjy-dev/grpc-go-chatroom/internal/proto"
 )
 
 var (
-	port int64
+	port      int64
+	mysqlHost string
+	mysqlPort int64
+	dbName    string
 )
 
 func main() {
+	loadConfigs()
+	// Serve websocket & gRPC-gateway
 	mux := websocketMux()
 	mux.Handle("/", gatewayMux())
+
+	// Serve frontend
 	mux.Handle("/static", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	grpcServer := grpcServer()
@@ -47,19 +55,19 @@ func combinedProtocolHandler(grpcServer *grpc.Server, gatewayAndWebsocketMux *ht
 }
 
 func grpcServer() *grpc.Server {
-
 	grpcServer := grpc.NewServer(
-		grpc.StreamInterceptor(authmiddleware.StreamServerInterceptor(authFunc)),
+		grpc.ChainStreamInterceptor(authmiddleware.StreamServerInterceptor(authFunc)),
 		// Exclude the "LogIn" method from authentication.
 		grpc.UnaryInterceptor(middlewares.UnaryServerAuthInterceptorWithBypassMethods(authFunc, "LogIn")),
 	)
 
-	pb.RegisterChatServiceServer(grpcServer, newChatServer())
+	pb.RegisterChatServiceServer(grpcServer, service.NewChatServiceServer())
 
 	return grpcServer
 }
 
-func init() {
+func loadConfigs() {
+	utils.MustLoadEnvFile()
 	config := viper.New()
 
 	config.AddConfigPath(".")

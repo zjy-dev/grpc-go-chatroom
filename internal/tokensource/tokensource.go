@@ -18,7 +18,6 @@ func New(token string) Auth {
 
 // GetRequestMetadata returns the metadata for the request
 func (a Auth) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
-
 	// Create a map to store the metadata
 	metadataMap := make(map[string]string)
 
@@ -31,7 +30,6 @@ func (a Auth) GetRequestMetadata(ctx context.Context, uri ...string) (map[string
 
 // RequireTransportSecurity returns whether or not the transport security is required
 func (a Auth) RequireTransportSecurity() bool {
-
 	// Return false as the transport security is not required
 	return false
 }

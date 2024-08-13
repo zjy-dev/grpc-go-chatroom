@@ -9,12 +9,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/spf13/viper"
 	"github.com/urfave/cli/v2"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/tokensource"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	pb "github.com/zjy-dev/grpc-go-chatroom/internal/proto"
+	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
 )
 
 var (
@@ -27,7 +28,7 @@ var (
 func mustLogin(client pb.ChatServiceClient) {
 
 	// Send a login request to the server
-	loginResp, err := client.LogIn(context.Background(), &pb.LoginReq{
+	loginResp, err := client.LogIn(context.Background(), &pb.LogInRequest{
 		Username: username,
 	})
 	if err != nil {
@@ -58,14 +59,13 @@ func chat(client pb.ChatServiceClient) {
 	if err != nil {
 		log.Panicf("client.Chat failed: %v\n", err)
 	}
-
 	// Create a channel to wait for the server to send a message
 	waitc := make(chan struct{})
 
 	// Start a goroutine to receive messages from the server
 	go func() {
 		for {
-			msg, err := stream.Recv()
+			resp, err := stream.Recv()
 			if err == io.EOF {
 				close(waitc)
 				return
@@ -75,7 +75,8 @@ func chat(client pb.ChatServiceClient) {
 			}
 
 			// Print the message from the server
-			fmt.Printf("[%s] %s\n", time.Unix(msg.GetTimestamp(), 0).Format("2006-01-02 15:04:05"), msg.GetText())
+			fmt.Printf("[%s] %s %s\n", time.Unix(resp.GetMessage().GetTimestamp(), 0).Format("2006-01-02 15:04:05"),
+				resp.GetMessage().GetUsername(), resp.GetMessage().GetTextContent())
 		}
 	}()
 
@@ -85,12 +86,12 @@ func chat(client pb.ChatServiceClient) {
 	for scanner.Scan() {
 		// Create a message to send to the server
 		msg := &pb.Message{
-			Text:      scanner.Text(),
-			Timestamp: time.Now().Unix(),
+			Type:        pb.MessageType_MESSAGE_TYPE_NORMAL,
+			TextContent: scanner.Text(),
 		}
 
-		// Send the message to the server
-		err := stream.Send(msg)
+		// Send the request to the server
+		err := stream.Send(&pb.ChatRequest{Message: msg})
 		if err != nil {
 			log.Fatalf("%v.Send(%v) = %v", client, msg, err)
 		}
@@ -105,7 +106,6 @@ func chat(client pb.ChatServiceClient) {
 
 	// Wait for the server to send a message
 	<-waitc
-
 }
 
 // mustNewClient function creates a new client connection to the server
@@ -118,7 +118,7 @@ func mustNewClient() (*grpc.ClientConn, pb.ChatServiceClient) {
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
-	fmt.Println("connected to server")
+	fmt.Println("connecting to server")
 
 	// Return the connection and client
 	return conn, pb.NewChatServiceClient(conn)
@@ -126,7 +126,6 @@ func mustNewClient() (*grpc.ClientConn, pb.ChatServiceClient) {
 
 // main function is the entry point of the program
 func main() {
-
 	// Create a new cli app
 	chatroomClient := &cli.App{
 		Name:  "gRPC-go-chatroom client",
@@ -142,8 +141,6 @@ func main() {
 			// Log in the user to the chatroom
 			mustLogin(client)
 
-			fmt.Println(token)
-
 			fmt.Printf("Hello, %s! Welcome to the chatroom!\n", username)
 			fmt.Println("Input your message and hit enter to shoot it, and havvvve a nice chat!")
 			// Run the chatroom
@@ -156,7 +153,7 @@ func main() {
 			&cli.Int64Flag{
 				Name:        "port",
 				Aliases:     []string{"p"},
-				Value:       50053,
+				Value:       8082,
 				Usage:       "the server port",
 				Destination: &port,
 			},
@@ -174,5 +171,25 @@ func main() {
 	// Run the cli app
 	if err := chatroomClient.Run(os.Args); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func init() {
+	config := viper.New()
+
+	config.AddConfigPath(".")
+	config.AddConfigPath("..")
+	config.AddConfigPath("./config")
+	config.AddConfigPath("../config")
+	config.SetConfigName("config")
+	config.SetConfigType("yaml")
+
+	if err := config.ReadInConfig(); err != nil {
+		log.Fatalf("failed to read config: %v", err)
+	}
+
+	port = int64(config.GetInt("server.port"))
+	if port == 0 {
+		log.Fatalf("server.port is not set or invalid, check config.yaml")
 	}
 }

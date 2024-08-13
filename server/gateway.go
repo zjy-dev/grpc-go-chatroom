@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	pb "github.com/zjy-dev/grpc-go-chatroom/internal/proto"
+	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
 )
 
 func cors(next http.Handler) http.Handler {

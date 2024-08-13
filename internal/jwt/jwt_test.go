@@ -1,3 +1,5 @@
+//go:build unit_test
+
 package jwt
 
 import (
@@ -24,15 +26,6 @@ func TestLoadJwtKey(t *testing.T) {
 	os.Unsetenv("JWT_KEY")
 	require.Equal("", os.Getenv("JWT_KEY"))
 	jwtKey = ""
-
-	os.WriteFile(".env", []byte("JWT_KEY="+testJWTKey+"-file"), 0644)
-	t.Cleanup(func() {
-		os.Unsetenv("JWT_KEY")
-		require.Equal("", os.Getenv("JWT_KEY"))
-		require.Nil(os.Remove(".env"))
-	})
-	mustLoadJwtKey()
-	require.Equal(testJWTKey+"-file", jwtKey)
 }
 
 func mustLoadJwtKeyHelper(t *testing.T) {

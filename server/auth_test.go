@@ -1,3 +1,5 @@
+//go:build unit_test
+
 package main
 
 import (
@@ -39,19 +41,19 @@ func TestAuthFunc(t *testing.T) {
 			name:    "InvalidTokenPrefix",
 			md:      map[string][]string{"authorization": {"invalid " + createTestToken("testuser")}},
 			wantErr: true,
-			errCode: codes.InvalidArgument,
+			errCode: codes.Unauthenticated,
 		},
 		{
 			name:    "EmptyToken",
 			md:      map[string][]string{"authorization": {"bearer "}},
 			wantErr: true,
-			errCode: codes.InvalidArgument,
+			errCode: codes.Unauthenticated,
 		},
 		{
 			name:    "InvalidToken",
 			md:      map[string][]string{"authorization": {"bearer invalid-token"}},
 			wantErr: true,
-			errCode: codes.InvalidArgument,
+			errCode: codes.Unauthenticated,
 		},
 	}
 

@@ -1,0 +1,136 @@
+// License header (if applicable)
+// File overview
+// Syntax
+// Package
+// Imports (sorted)
+// File options
+// Everything else
+
+syntax = "proto3";
+package chat.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "./chat";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  // message SecurityDefinitions {
+  //   map<string, SecurityScheme> security = 1;
+  // }
+  security_definitions: {
+    security: {
+      key: "jwt"
+      value: {
+        type: TYPE_API_KEY
+        name: "Authorization"
+        in: IN_HEADER
+      }
+    }
+  }
+
+  // repeated SecurityRequirement security = 12;
+  // message SecurityRequirement {
+  //   // If the security scheme is of type "oauth2", then the value is a list of
+  //   // scope names required for the execution. For other security scheme types,
+  //   // the array MUST be empty.
+  //   message SecurityRequirementValue {
+  //     repeated string scope = 1;
+  //   }
+
+  //   map<string, SecurityRequirementValue> security_requirement = 1;
+  // }
+  security: {
+    security_requirement: {
+      key: "jwt"
+      value: {}
+    }
+  }
+};
+
+service ChatService {
+  rpc LogIn(LogInRequest) returns (LogInResponse) {
+    option (google.api.http) = {
+      post: "/login"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Log in to the chatroom"
+      description: "Very simple log in interface, it takes a username and returns a JWT token."
+      security: {}
+    };
+  }
+
+  rpc LogOut(LogOutRequest) returns (LogOutResponse) {
+    option (google.api.http) = {
+      post: "/logout"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Log out from the chatroom"
+      description: "Must carry a JWT token in header.\nReturn nothing, client should close the websocket or grpc connection after calling this."
+    };
+  }
+
+  rpc Chat(stream ChatRequest) returns (stream ChatResponse);
+}
+
+message LogInRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      // I never set `title`, so I write this just for showing syntax.
+      title: "LoginReq"
+      description: "LoginReq is the request message for LogIn, include a not empty username."
+      required: ["username"]
+    }
+
+    // When using Apifox I don't need to set `example` cause it has a handy tool for this.
+    // So I write this just for showing syntax.
+    example: "{\"username\": \"Alice\"}"
+  };
+  string username = 1;
+}
+
+message LogInResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      description: "LoginResp is the response message for LogIn, include a not empty JWT token which encoded username in it."
+      required: ["token"]
+    }
+  };
+  string token = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "The JWT token, encoded username in it"}];
+}
+
+message LogOutRequest {}
+message LogOutResponse {}
+
+enum MessageType {
+  MESSAGE_TYPE_UNSPECIFIED = 0;
+  MESSAGE_TYPE_USERENTER = 1;
+  MESSAGE_TYPE_USERLEAVE = 2;
+  MESSAGE_TYPE_NORMAL = 3;
+}
+message Message {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      description: "Chat room message"
+      required: [
+        "type",
+        "timestamp"
+      ]
+    }
+  };
+  MessageType type = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "The type of the message"}];
+  int64 timestamp = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "Timestamp when the user sent the message locally"}];
+  string text_content = 3 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "The content of the message."}];
+  bytes binary_content = 4 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "The content of the message."}];
+  string username = 5 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "This message onwer's username."}];
+  uint64 message_number = 6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "The message number of the message, start from 1 and increase by 1 per message."}];
+}
+
+message ChatRequest {
+  Message message = 1;
+}
+message ChatResponse {
+  Message message = 1;
+}
