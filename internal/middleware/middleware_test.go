@@ -1,6 +1,6 @@
 //go:build unit_test
 
-package middlewares
+package middleware
 
 import (
 	"context"

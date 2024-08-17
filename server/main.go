@@ -9,9 +9,9 @@ import (
 	authmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
 	"github.com/spf13/viper"
 	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
-	"github.com/zjy-dev/grpc-go-chatroom/internal/middlewares"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/middleware"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/service"
-	"github.com/zjy-dev/grpc-go-chatroom/internal/utils"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/util"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
@@ -58,7 +58,7 @@ func grpcServer() *grpc.Server {
 	grpcServer := grpc.NewServer(
 		grpc.ChainStreamInterceptor(authmiddleware.StreamServerInterceptor(authFunc)),
 		// Exclude the "LogIn" method from authentication.
-		grpc.UnaryInterceptor(middlewares.UnaryServerAuthInterceptorWithBypassMethods(authFunc, "LogIn")),
+		grpc.UnaryInterceptor(middleware.UnaryServerAuthInterceptorWithBypassMethods(authFunc, "LogIn")),
 	)
 
 	pb.RegisterChatServiceServer(grpcServer, service.NewChatServiceServer())
@@ -67,7 +67,7 @@ func grpcServer() *grpc.Server {
 }
 
 func loadConfigs() {
-	utils.MustLoadEnvFile()
+	util.MustLoadEnvFile()
 	config := viper.New()
 
 	config.AddConfigPath(".")

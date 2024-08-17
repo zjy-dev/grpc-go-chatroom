@@ -27,16 +27,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ChatService_LogIn_FullMethodName  = "/chat.v1.ChatService/LogIn"
-	ChatService_LogOut_FullMethodName = "/chat.v1.ChatService/LogOut"
-	ChatService_Chat_FullMethodName   = "/chat.v1.ChatService/Chat"
+	ChatService_LogInOrRegister_FullMethodName = "/chat.v1.ChatService/LogInOrRegister"
+	ChatService_LogOut_FullMethodName          = "/chat.v1.ChatService/LogOut"
+	ChatService_Chat_FullMethodName            = "/chat.v1.ChatService/Chat"
 )
 
 // ChatServiceClient is the client API for ChatService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatServiceClient interface {
-	LogIn(ctx context.Context, in *LogInRequest, opts ...grpc.CallOption) (*LogInResponse, error)
+	LogInOrRegister(ctx context.Context, in *LogInOrRegisterRequest, opts ...grpc.CallOption) (*LogInOrRegisterResponse, error)
 	LogOut(ctx context.Context, in *LogOutRequest, opts ...grpc.CallOption) (*LogOutResponse, error)
 	Chat(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[ChatRequest, ChatResponse], error)
 }
@@ -49,10 +49,10 @@ func NewChatServiceClient(cc grpc.ClientConnInterface) ChatServiceClient {
 	return &chatServiceClient{cc}
 }
 
-func (c *chatServiceClient) LogIn(ctx context.Context, in *LogInRequest, opts ...grpc.CallOption) (*LogInResponse, error) {
+func (c *chatServiceClient) LogInOrRegister(ctx context.Context, in *LogInOrRegisterRequest, opts ...grpc.CallOption) (*LogInOrRegisterResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LogInResponse)
-	err := c.cc.Invoke(ctx, ChatService_LogIn_FullMethodName, in, out, cOpts...)
+	out := new(LogInOrRegisterResponse)
+	err := c.cc.Invoke(ctx, ChatService_LogInOrRegister_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ type ChatService_ChatClient = grpc.BidiStreamingClient[ChatRequest, ChatResponse
 // All implementations must embed UnimplementedChatServiceServer
 // for forward compatibility.
 type ChatServiceServer interface {
-	LogIn(context.Context, *LogInRequest) (*LogInResponse, error)
+	LogInOrRegister(context.Context, *LogInOrRegisterRequest) (*LogInOrRegisterResponse, error)
 	LogOut(context.Context, *LogOutRequest) (*LogOutResponse, error)
 	Chat(grpc.BidiStreamingServer[ChatRequest, ChatResponse]) error
 	mustEmbedUnimplementedChatServiceServer()
@@ -99,8 +99,8 @@ type ChatServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedChatServiceServer struct{}
 
-func (UnimplementedChatServiceServer) LogIn(context.Context, *LogInRequest) (*LogInResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LogIn not implemented")
+func (UnimplementedChatServiceServer) LogInOrRegister(context.Context, *LogInOrRegisterRequest) (*LogInOrRegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LogInOrRegister not implemented")
 }
 func (UnimplementedChatServiceServer) LogOut(context.Context, *LogOutRequest) (*LogOutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
@@ -129,20 +129,20 @@ func RegisterChatServiceServer(s grpc.ServiceRegistrar, srv ChatServiceServer) {
 	s.RegisterService(&ChatService_ServiceDesc, srv)
 }
 
-func _ChatService_LogIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LogInRequest)
+func _ChatService_LogInOrRegister_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogInOrRegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServiceServer).LogIn(ctx, in)
+		return srv.(ChatServiceServer).LogInOrRegister(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChatService_LogIn_FullMethodName,
+		FullMethod: ChatService_LogInOrRegister_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServiceServer).LogIn(ctx, req.(*LogInRequest))
+		return srv.(ChatServiceServer).LogInOrRegister(ctx, req.(*LogInOrRegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -180,8 +180,8 @@ var ChatService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ChatServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "LogIn",
-			Handler:    _ChatService_LogIn_Handler,
+			MethodName: "LogInOrRegister",
+			Handler:    _ChatService_LogInOrRegister_Handler,
 		},
 		{
 			MethodName: "LogOut",

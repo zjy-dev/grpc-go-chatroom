@@ -15,7 +15,7 @@ var jwtKey string
 // init function is used to load the .env file and set the jwtKey variable
 func mustLoadJwtKey() {
 	if jwtKey = os.Getenv("JWT_KEY"); jwtKey == "" {
-		log.Panicf("no JWT_KEY in .env")
+		log.Panicf("JWT_KEY not in environment variable")
 	}
 }
 

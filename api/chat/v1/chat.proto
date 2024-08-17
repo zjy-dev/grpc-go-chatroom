@@ -48,7 +48,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service ChatService {
-  rpc LogIn(LogInRequest) returns (LogInResponse) {
+  rpc LogInOrRegister(LogInOrRegisterRequest) returns (LogInOrRegisterResponse) {
     option (google.api.http) = {
       post: "/login"
       body: "*"
@@ -75,23 +75,35 @@ service ChatService {
   rpc Chat(stream ChatRequest) returns (stream ChatResponse);
 }
 
-message LogInRequest {
+message LogInOrRegisterRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
       // I never set `title`, so I write this just for showing syntax.
-      title: "LoginReq"
-      description: "LoginReq is the request message for LogIn, include a not empty username."
-      required: ["username"]
+      title: "LoginRequest"
+      description: "LoginRequest is the request message for LogIn, requires username and password."
+      required: [
+        "username",
+        "password"
+      ]
     }
 
     // When using Apifox I don't need to set `example` cause it has a handy tool for this.
     // So I write this just for showing syntax.
-    example: "{\"username\": \"Alice\"}"
+    // example: "{\"username\": \"Alice\"}"
   };
-  string username = 1;
+  string username = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "Username, required and have length limits"
+    min_length: 2
+    max_length: 24
+  }];
+  string password = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    description: "Password(plaintext), required and have length limits"
+    min_length: 3
+    max_length: 25
+  }];
 }
 
-message LogInResponse {
+message LogInOrRegisterResponse {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
       description: "LoginResp is the response message for LogIn, include a not empty JWT token which encoded username in it."

@@ -28,7 +28,7 @@ var (
 func mustLogin(client pb.ChatServiceClient) {
 
 	// Send a login request to the server
-	loginResp, err := client.LogIn(context.Background(), &pb.LogInRequest{
+	loginResp, err := client.LogInOrRegister(context.Background(), &pb.LogInOrRegisterRequest{
 		Username: username,
 	})
 	if err != nil {

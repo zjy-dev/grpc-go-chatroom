@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"io"
 	"log"
 	"sync"
@@ -10,13 +11,22 @@ import (
 	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/db"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/jwt"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/util"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 var (
-	JWTContextKey = &jwtContext{}
+	JWTContextKey         = &jwtContext{}
+	dbConn        *sql.DB = nil
 )
+
+func dBConn() *sql.DB {
+	if dbConn == nil {
+		dbConn = db.MustConnect("127.0.0.1", 3306, "grpc_go_chatroom")
+	}
+	return dbConn
+}
 
 type jwtContext struct{}
 
@@ -43,10 +53,10 @@ func NewChatServiceServer() *chatServiceServer {
 	return server
 }
 
-// LogIn is a method that implements the LogIn method of the ChatServiceServer interface.
-func (cs *chatServiceServer) LogIn(ctx context.Context, req *pb.LogInRequest) (*pb.LogInResponse, error) {
-	if req.GetUsername() == "" {
-		return nil, status.Errorf(codes.InvalidArgument, "username is empty")
+// LogInOrRegister is a method that implements the LogInOrRegister method of the ChatServiceServer interface.
+func (cs *chatServiceServer) LogInOrRegister(ctx context.Context, req *pb.LogInOrRegisterRequest) (*pb.LogInOrRegisterResponse, error) {
+	if len(req.GetUsername()) < 2 || len(req.GetUsername()) > 24 || len(req.GetPassword()) < 3 || len(req.GetPassword()) > 25 {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid username or password length")
 	}
 
 	// Lock the mutex to prevent concurrent access to the clientsMap.
@@ -58,6 +68,35 @@ func (cs *chatServiceServer) LogIn(ctx context.Context, req *pb.LogInRequest) (*
 		return nil, status.Errorf(codes.AlreadyExists, "user: %s has already logged in", req.GetUsername())
 	}
 
+	// Check if the user has registered.
+	userRegisterd, err := db.UserExistsByName(dBConn(), req.GetUsername())
+	if err != nil {
+		return nil, util.WrapGRPCError(err, codes.Internal, "failed to check if user exists")
+	}
+
+	if !userRegisterd {
+		// Insert the user into the database.
+		hashedPwd, err := util.HashPassword(req.GetPassword())
+		if err != nil {
+			return nil, util.WrapGRPCError(err, codes.Internal, "failed to hash password")
+		}
+		if _, err := db.InsertUser(dBConn(), req.GetUsername(), hashedPwd); err != nil {
+			return nil, util.WrapGRPCError(err, codes.Internal, "failed to register user")
+		}
+	} else {
+		// User Registered
+		// Check password
+		user, err := db.GetUserByUsername(dBConn(), req.GetUsername())
+		if err != nil {
+			return nil, util.WrapGRPCError(err, codes.Internal, "failed to check password")
+		}
+
+		// Check password
+		if !util.CheckPasswordHash(req.GetPassword(), user.PasswordHash) {
+			return nil, status.Errorf(codes.Unauthenticated, "incorrect password")
+		}
+	}
+
 	// Generate a JWT token for the user.
 	token, err := jwt.GenerateJwt(req.GetUsername())
 	if err != nil {
@@ -67,7 +106,7 @@ func (cs *chatServiceServer) LogIn(ctx context.Context, req *pb.LogInRequest) (*
 	// Add the user to the clientsMap.
 	cs.clientsMap[req.GetUsername()] = client{}
 
-	return &pb.LogInResponse{Token: token}, nil
+	return &pb.LogInOrRegisterResponse{Token: token}, nil
 }
 
 // LogOut is a method that implements the LogOut method of the ChatServiceServer interface.
@@ -165,10 +204,9 @@ func (cs *chatServiceServer) Chat(stream pb.ChatService_ChatServer) error {
 // Broadcast broadcasts messages to all the clients(Fan-out).
 // msg from receiveChan already specified timestamp and username if exists
 func (cs *chatServiceServer) Broadcast() {
-	dbConn := db.MustConnect("127.0.0.1", 3306, "grpc_go_chatroom")
-	defer dbConn.Close()
+
 	for msg := range cs.receiveChan {
-		id, err := db.InsertMessage(dbConn, 42, msg.Username, msg.TextContent)
+		id, err := db.InsertMessage(dBConn(), 42, msg.Username, msg.TextContent)
 		if err != nil || id == 0 {
 			log.Printf("failed to insert message: %v\n", err)
 			continue

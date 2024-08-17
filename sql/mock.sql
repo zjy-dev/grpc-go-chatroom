@@ -18,7 +18,7 @@ VALUES (
     (
         3,
         'Charlie',
-        'Hey folks, what’s up?'
+        'Hey folks, what's up?'
     ),
     (
         2,

@@ -3,7 +3,6 @@
 package db
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -23,18 +22,7 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func TestMustConnect(t *testing.T) {
-	require := require.New(t)
-	require.NotPanics(func() {
-		dbConn := MustConnect("127.0.0.1", 3306, "grpc_go_chatroom")
-		if dbConn == nil {
-			log.Panic("MustConnect should not return nil")
-		}
-		dbConn.Close()
-	})
-}
-
-func TestGetMessages(t *testing.T) {
+func TestGetMessagesIntegration(t *testing.T) {
 	tmpDir := t.TempDir()
 	p := filepath.Join(tmpDir, "get_messages.sql")
 	// TODO: Figure out os.Mode*
@@ -43,12 +31,12 @@ func TestGetMessages(t *testing.T) {
 
 	dbConn := MustConnect("127.0.0.1", 3306, "grpc_go_chatroom")
 
-	res, err := GetMessages(dbConn, tmpDir)
+	res, err := GetMessages(dbConn)
 	require.NotEmpty(res)
 	require.Nil(err)
 }
 
-func TestInsertMessage(t *testing.T) {
+func TestInsertMessageIntegration(t *testing.T) {
 	require := require.New(t)
 	dbConn := MustConnect("127.0.0.1", 3306, "grpc_go_chatroom")
 

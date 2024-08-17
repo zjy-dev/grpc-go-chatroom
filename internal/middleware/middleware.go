@@ -1,10 +1,10 @@
-package middlewares
+package middleware
 
 import (
 	"context"
 	"strings"
 
-	"github.com/zjy-dev/grpc-go-chatroom/internal/utils"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/util"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 )
@@ -31,7 +31,7 @@ func UnaryServerAuthInterceptorWithBypassMethods(authFunc AuthFunc, bypassMethod
 		// If the method isn't in the bypass list, call authFunc and then call the handler.
 		ctx, err := authFunc(ctx)
 		if err != nil {
-			return nil, utils.WrapGRPCError(err, codes.Unauthenticated, "authentication failed")
+			return nil, util.WrapGRPCError(err, codes.Unauthenticated, "authentication failed")
 		}
 		return handler(ctx, req)
 	}

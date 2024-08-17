@@ -20,12 +20,12 @@
       "post": {
         "summary": "Log in to the chatroom",
         "description": "Very simple log in interface, it takes a username and returns a JWT token.",
-        "operationId": "ChatService_LogIn",
+        "operationId": "ChatService_LogInOrRegister",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1LogInResponse"
+              "$ref": "#/definitions/v1LogInOrRegisterResponse"
             }
           },
           "default": {
@@ -38,11 +38,11 @@
         "parameters": [
           {
             "name": "body",
-            "description": "LoginReq is the request message for LogIn, include a not empty username.",
+            "description": "LoginRequest is the request message for LogIn, requires username and password.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1LogInRequest"
+              "$ref": "#/definitions/v1LogInOrRegisterRequest"
             }
           }
         ],
@@ -124,23 +124,30 @@
         }
       }
     },
-    "v1LogInRequest": {
+    "v1LogInOrRegisterRequest": {
       "type": "object",
-      "example": {
-        "username": "Alice"
-      },
       "properties": {
         "username": {
-          "type": "string"
+          "type": "string",
+          "description": "Username, required and have length limits",
+          "maxLength": 24,
+          "minLength": 2
+        },
+        "password": {
+          "type": "string",
+          "description": "Password(plaintext), required and have length limits",
+          "maxLength": 25,
+          "minLength": 3
         }
       },
-      "description": "LoginReq is the request message for LogIn, include a not empty username.",
-      "title": "LoginReq",
+      "description": "LoginRequest is the request message for LogIn, requires username and password.",
+      "title": "LoginRequest",
       "required": [
-        "username"
+        "username",
+        "password"
       ]
     },
-    "v1LogInResponse": {
+    "v1LogInOrRegisterResponse": {
       "type": "object",
       "properties": {
         "token": {
@@ -187,7 +194,7 @@
         "messageNumber": {
           "type": "string",
           "format": "uint64",
-          "description": "The message number of the message, start from 0 and increase by 1 per message."
+          "description": "The message number of the message, start from 1 and increase by 1 per message."
         }
       },
       "description": "Chat room message",

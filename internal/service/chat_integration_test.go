@@ -19,11 +19,13 @@ import (
 func TestMain(m *testing.M) {
 	os.Setenv("DBUSER", "root")
 	os.Setenv("DBPASS", "123456")
+	os.Setenv("JWT_KEY", "zjy-dev")
 
 	code := m.Run()
 
 	os.Unsetenv("DBUSER")
 	os.Unsetenv("DBPASS")
+	os.Unsetenv("JWT_KEY")
 
 	os.Exit(code)
 }
