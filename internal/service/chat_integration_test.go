@@ -81,7 +81,7 @@ func (m *mockChatServerStream) Recv() (*pb.ChatRequest, error) {
 	return req, nil
 }
 
-func TestChat(t *testing.T) {
+func TestChatIntegration(t *testing.T) {
 	require := require.New(t)
 
 	t.Run("TwoUsers", func(t *testing.T) {

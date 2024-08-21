@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strings"
 
+	"embed"
+
 	authmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
 	"github.com/spf13/viper"
 	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
@@ -22,6 +24,9 @@ var (
 	mysqlHost string
 	mysqlPort int64
 	dbName    string
+
+	//go:embed config.yaml
+	configFS embed.FS
 )
 
 func main() {
@@ -68,16 +73,23 @@ func grpcServer() *grpc.Server {
 
 func loadConfigs() {
 	util.MustLoadEnvFile()
-	config := viper.New()
 
-	config.AddConfigPath(".")
-	config.AddConfigPath("..")
-	config.AddConfigPath("./config")
-	config.AddConfigPath("../config")
-	config.SetConfigName("config")
+	content, err := configFS.ReadFile("config.yaml")
+	if err != nil || len(content) == 0 {
+		log.Fatalf("failed to read embed config file: %v", err)
+	}
+
+	config := viper.New()
+	config.SetConfigFile("config.yaml")
 	config.SetConfigType("yaml")
 
-	if err := config.ReadInConfig(); err != nil {
+	configFile, err := configFS.Open("config.yaml")
+	if err != nil {
+		log.Fatalf("failed to open embed config file: %v", err)
+	}
+
+	err = config.ReadConfig(configFile)
+	if err != nil {
 		log.Fatalf("failed to read config: %v", err)
 	}
 
