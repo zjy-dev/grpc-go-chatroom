@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    color: #343a40;
+    font-size: 24px;
+    height: 100vh;
+    text-align: center;
+    font-weight: bold;
+
+    display: grid;
+    grid-template-columns: 60px 280px 1fr;
+    grid-template-rows: 80px 1fr;
+    grid-template-areas:
+        "nav menu menu"
+        "nav chat_option main ";
+}
+

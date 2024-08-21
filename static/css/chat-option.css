@@ -1,0 +1,60 @@
+.chat-option {
+    grid-area: chat_option;
+
+    background-color: #e9ecef;
+
+    /* How elements that don't fit into container appear */
+    /* overflow: scroll; */
+
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-option__box {
+    background-color: #ffffff;
+    height: 72px;
+    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    grid-template-rows: repeat(2, 18px);
+
+    place-content: center center;
+    place-items: center center;
+    padding-left: 17px;
+    padding-right: 17px;
+
+    column-gap: 7px;
+}
+
+.chat-option__box > img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    grid-row: 1/-1;
+    grid-column: 1/2;
+}
+
+.chat-option__name {
+    font-size: 13px;
+    grid-row: 1/2;
+    grid-column: 2/3;
+
+    font-weight: 400;
+    color: black;
+    align-self: end;
+    justify-self: start;
+
+    padding-bottom: 2px;
+}
+
+.chat-option__message {
+    font-size: 12px;
+    grid-row: 2/3;
+    grid-column: 2/3;
+    color: rgb(153, 153, 153);
+
+    font-weight: 400;
+    align-self: start;
+    justify-self: start;
+    padding-top: 3px;
+}
