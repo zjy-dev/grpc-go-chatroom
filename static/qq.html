@@ -18,32 +18,12 @@
     <link rel="stylesheet" href="./css/common.css" />
     <link rel="stylesheet" href="./css/nav.css" />
     <link rel="stylesheet" href="./css/chat-option.css" />
+    <link rel="stylesheet" href="./css/menu.css" />
 
     <style>
-      menu {
-        grid-area: menu;
-        background-color: #7048e8;
-
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 0 40px;
-      }
-
-      button {
-        display: inline-block;
-        font-size: 16px;
-        font-weight: bold;
-        background-color: #5f3dc4;
-        border: none;
-        cursor: pointer;
-        color: #fff;
-        padding: 8px 12px;
-      }
-
-      button:last-child {
-        background-color: #d6336c;
-        margin-left: auto;
+      main {
+        grid-area: main;
+        background-color: gainsboro;
       }
     </style>
   </head>
@@ -138,40 +118,38 @@
       </div>
       <div class="nav__secondary-function-container"></div>
     </nav>
-    <menu>
-      <button>New</button>
-      <button>Reply</button>
-      <button>Forward</button>
-      <button>Mark unread</button>
-      <button>Trash</button>
-    </menu>
+    <div style="grid-area: search; border: 1px solid lightgray"></div>
+    <menu> </menu>
     <section class="chat-option">
       <div class="chat-option__box chat-option__box--friend">
         <img src="./markae-avatar.jpg" alt="Markae Avatar" />
-        <div class="chat-option__name chat-option__name--friend">
-          全能型AI战马
+        <div class="chat-option__name-time-box">
+          <p class="chat-option__name">全能型AI战马</p>
+          <p class="chat-option__time">20:08</p>
         </div>
-        <div class="chat-option__message chat-option__message--friend">
-          [动画表情]
-        </div>
-      </div>
-      <div class="chat-option__box chat-option__box--friend">
-        <img src="./avatar.jpg" alt="Avatar" />
-        <div class="chat-option__name chat-option__name--friend">GigaYao</div>
-        <div class="chat-option__message chat-option__message--friend">
-          GigaChad bring you victory!
+        <div class="chat-option__message">
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea nam
+          impedit magnam quod perspiciatis reprehenderit eligendi obcaecati
+          praesentium suscipit quaerat tenetur atque, sint voluptas. Sit cum
+          repellat ducimus asperiores consequuntur.
         </div>
       </div>
+
       <div class="chat-option__box chat-option__box--friend">
-        <img src="./avatar.jpg" alt="Avatar" />
-        <div class="chat-option__name chat-option__name--friend">
-          Alice Check
+        <img src="./avatar.jpg" alt="Markae Avatar" />
+        <div class="chat-option__name-time-box">
+          <p class="chat-option__name">糕手耀</p>
+          <p class="chat-option__time">20:02</p>
         </div>
-        <div class="chat-option__message chat-option__message--friend">
-          Hello123, what a day!!!
+        <div class="chat-option__message">
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea nam
+          impedit magnam quod perspiciatis reprehenderit eligendi obcaecati
+          praesentium suscipit quaerat tenetur atque, sint voluptas. Sit cum
+          repellat ducimus asperiores consequuntur.
         </div>
       </div>
     </section>
-    <main>Chat Area</main>
+
+    <main></main>
   </body>
 </html>
