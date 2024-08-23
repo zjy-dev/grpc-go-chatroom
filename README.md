@@ -48,7 +48,7 @@
 
 A **learning-purpose** chatroom built with [gRPC-go](https://github.com/grpc/grpc-go), integrates **modern** development toolchain.
 
-The every **development process**(e.g.commit messages) conforms to corresponding specifications, and particularly the code conforms to the [Google Go StyleGuide](https://google.github.io/styleguide/go/).
+Every **development process**(e.g.commit messages) conforms to corresponding specifications, and particularly the code conforms to the [Google Go StyleGuide](https://google.github.io/styleguide/go/).
 
 Even the **README itself** is part of my learning for software-engineering specifications, cool, right?
 
@@ -56,12 +56,13 @@ I'll write everything I learned **(and also the source I've learned them!!!)** b
 
 
 ## :sparkles: Features ##
-
-:heavy_check_mark: **Auth**: Use *jwt* to manage user log in/out.\
-:heavy_check_mark: **Continuous Integration**: Use *Github Actions* to automatically build and test.\
-:heavy_check_mark: **Command Line**: Use *urfave/cli* to build CLI interface.\
+:heavy_check_mark: **Deploy**: Use go's *embed* compile, only a binary file needed(also you can use docker)
 :heavy_check_mark: **Testing**: Use *Testify* for *assertions and mocks*.\
 :heavy_check_mark: **Building**: Use *Makefile*, which is the best building tool for go projects.
+:heavy_check_mark: **Auth**: Use *jwt* to manage user log in/out.\
+:heavy_check_mark: **Continuous Integration**: Use *Github Actions* to automatically build and test.\
+:heavy_check_mark: **Command Line**: Use *urfave/cli* for client's command-line version.\
+
 
 ## :rocket: Technologies ##
 
