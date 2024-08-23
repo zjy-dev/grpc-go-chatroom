@@ -13,8 +13,9 @@ body {
 
     display: grid;
     grid-template-columns: 60px 280px 1fr;
-    grid-template-rows: 66px 1fr;
+    grid-template-rows: 66px 1fr 208px;
     grid-template-areas:
-        "nav search      menu"
-        "nav chat_option main ";
+        "nav search      menu "
+        "nav chat_option main "
+        "nav chat_option input";
 }

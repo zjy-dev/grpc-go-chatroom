@@ -1,0 +1,47 @@
+.input {
+    grid-area: input;
+    background-color: rgb(242, 242, 242);
+    border-top: 1px solid rgb(233, 233, 233);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.input textarea {
+    font-family: "Inter", sans-serif;
+    background-color: rgb(242, 242, 242);
+
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+
+    border: none;
+
+    outline: none;
+
+    overflow: auto;
+
+    padding: 5px 23px 0 23px;
+}
+
+.input__toolbar {
+    display: flex;
+    gap: 17px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 11px 23px 0 23px;
+}
+.input__toolbar > svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.4;
+}
+
+.input__toolbar > svg:last-child {
+    margin-left: auto;
+}
+
+.input__toolbar > svg:hover {
+    stroke: #0099ff;
+}
