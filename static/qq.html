@@ -32,14 +32,46 @@
 
         align-items: center;
         flex-direction: column;
+        padding-top: 20px;
       }
 
-      .main__user-message {
+      .main__user-message-box {
         align-self: flex-end;
+        margin-right: 20px;
+        display: flex;
+        gap: 10px;
       }
 
-      .main__other-message {
+      .main__message {
+        background-color: #0099ff;
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 13px;
+        border-radius: 8px;
+        padding: 10px 11px 10px 11px;
+      }
+
+      .main__other-message-box {
         align-self: flex-start;
+        margin-left: 20px;
+        display: flex;
+        gap: 10px;
+      }
+      .main__message--other {
+        background-color: #ffffff;
+        color: #000000;
+      }
+
+      .main__avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+      }
+
+      .main__time {
+        font-weight: 400;
+        font-size: 12px;
+        color: #999999;
       }
     </style>
   </head>
@@ -269,9 +301,15 @@
     </section>
 
     <main>
-      <div class="main__user-message">我的消息</div>
+      <div class="main__user-message-box">
+        <div class="main__message">全能型AI战马</div>
+        <img class="main__avatar" src="./avatar.jpg" alt="User Avatar" />
+      </div>
       <div class="main__time">昨天 07:56</div>
-      <div class="main__other-message">别人的消息</div>
+      <div class="main__other-message-box">
+        <img class="main__avatar" src="./markae-avatar.jpg" alt="User Avatar" />
+        <div class="main__message main__message--other">全能型AI战马</div>
+      </div>
     </main>
   </body>
 </html>
