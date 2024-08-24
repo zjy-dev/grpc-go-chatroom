@@ -18,61 +18,11 @@
   <link rel="stylesheet" href="./css/chat-option.css" />
   <link rel="stylesheet" href="./css/menu.css" />
   <link rel="stylesheet" href="./css/input.css" />
+  <link rel="stylesheet" href="./css/main.css" />
+  <link rel="stylesheet" href="./css/search.css" />
 
   <style>
-    main {
-      grid-area: main;
-      background-color: rgb(242, 242, 242);
-      border-left: 1px solid rgb(233, 233, 233);
-      border-top: 1px solid rgb(233, 233, 233);
 
-      display: flex;
-      justify-content: flex-start;
-
-      align-items: center;
-      flex-direction: column;
-      padding-top: 20px;
-    }
-
-    .main__user-message-box {
-      align-self: flex-end;
-      margin-right: 20px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .main__message {
-      background-color: #0099ff;
-      color: #ffffff;
-      font-weight: 400;
-      font-size: 13px;
-      border-radius: 8px;
-      padding: 10px 11px 10px 11px;
-    }
-
-    .main__other-message-box {
-      align-self: flex-start;
-      margin-left: 20px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .main__message--other {
-      background-color: #ffffff;
-      color: #000000;
-    }
-
-    .main__avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-    }
-
-    .main__time {
-      font-weight: 400;
-      font-size: 12px;
-      color: #999999;
-    }
   </style>
 </head>
 
@@ -122,7 +72,14 @@
     </div>
     <div class="nav__secondary-function-container"></div>
   </nav>
-  <div style="grid-area: search">Search</div>
+  <div class="search">
+    <input class="search__input" type="text" placeholder="搜索" />
+    <button class="search__add-button">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+    </button>
+  </div>
   <menu>
     <div class="menu__name">
       <p>全能型AI战马</p>
@@ -242,8 +199,18 @@
     </div>
     <textarea
       id="user-input">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste quibusdam aliquid repellendus minus maiores explicabo nesciunt nihil eos quod deleniti voluptates, quis alias, dolorum blanditiis! Sit a dignissimos repellendus voluptatibus? Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure atque veniam fugiat perferendis? Vel nesciunt aperiam, tenetur animi maiores debitis deserunt officia eum corrupti aliquam ipsa placeat necessitatibus doloremque nisi.</textarea>
-    <div>
-      <!-- TODO: Submit Button -->
+    <div class="input__submit">
+
+      <div class="input__submit-button-box">
+        <div>发送</div>
+        <div>|</div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+          </svg>
+        </div>
+      </div>
     </div>
   </section>
 </body>

@@ -1,0 +1,34 @@
+.search {
+    grid-area: search;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 10px;
+}
+
+.search__input {
+    width: 174px;
+    height: 30px;
+}
+
+.search__add-button {
+    border: none;
+    background-color: rgb(245, 245, 245);
+    width: 30px;
+    height: 30px;
+}
+.search__add-button:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+/* TODO */
+.search__add-button:focus {
+    background-color: rgb(215, 215, 215);
+}
+
+.search__add-button > svg {
+    width: 24px;
+    height: 24px;
+    stroke: rgb(180, 180, 180);
+}
