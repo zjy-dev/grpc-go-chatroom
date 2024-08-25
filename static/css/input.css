@@ -17,9 +17,7 @@
     resize: none;
 
     border: none;
-
     outline: none;
-
     overflow: auto;
 
     padding: 5px 23px 0 23px;
@@ -53,7 +51,7 @@
     padding-right: 20px;
 }
 
-.input__submit-button-box {
+.input__submit-button-container {
     border-radius: 4px;
     background-color: #0099ff;
     color: #ffffff;
@@ -66,24 +64,27 @@
     padding: 2px 4px 2px 4px;
 }
 
-.input__submit-button-box > div:nth-child(1) {
+.input__submit-button-container > div:nth-child(1) {
+    line-height: 22px;
     text-align: center;
     width: 64px;
 }
-.input__submit-button-box > div:nth-child(2) {
+.input__submit-button-container > div:nth-child(2) {
+    line-height: 22px;
+
     font-weight: 100;
     text-align: center;
     flex: 1;
 }
 
-.input__submit-button-box > div:nth-child(3) {
+.input__submit-button-container > div:nth-child(3) {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 30px;
 }
 
-.input__submit-button-box svg {
+.input__submit-button-container svg {
     width: 14px;
     height: 14px;
 }

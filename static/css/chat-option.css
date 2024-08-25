@@ -10,7 +10,7 @@
     flex-direction: column;
 }
 
-.chat-option__box {
+.chat-option__container {
     background-color: #ffffff;
     height: 72px;
     flex-shrink: 0;
@@ -26,7 +26,7 @@
     column-gap: 7px;
 }
 
-.chat-option__box > img {
+.chat-option__container > img {
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -34,7 +34,7 @@
     grid-column: 1/2;
 }
 
-.chat-option__name-time-box {
+.chat-option__name-time-container {
     grid-row: 1/2;
     grid-column: 2/3;
 
@@ -76,6 +76,15 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.chat-option__container--active {
+    background-color: rgb(0, 153, 255);
+}
+
+.chat-option__container--active div,
+.chat-option__container--active p {
+    color: #ffffff;
 }
 
 /* 自定义滚动条代码 */

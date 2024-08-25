@@ -12,7 +12,7 @@ main {
     padding-top: 20px;
 }
 
-.main__user-message-box {
+.main__user-message-container {
     align-self: flex-end;
     margin-right: 20px;
     display: flex;
@@ -28,7 +28,7 @@ main {
     padding: 10px 11px 10px 11px;
 }
 
-.main__other-message-box {
+.main__other-message-container {
     align-self: flex-start;
     margin-left: 20px;
     display: flex;

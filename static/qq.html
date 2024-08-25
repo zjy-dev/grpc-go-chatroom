@@ -21,14 +21,12 @@
   <link rel="stylesheet" href="./css/main.css" />
   <link rel="stylesheet" href="./css/search.css" />
 
-  <style>
-
-  </style>
+  <style></style>
 </head>
 
 <body>
   <nav>
-    <img class="nav__main-user-avator" src="./avatar.jpg" alt="User Avatar" class="avatar" />
+    <img class="nav__main-user-avator" src="./img/avatar-user.jpg" alt="User Avatar" class="avatar" />
     <div class="nav__main-function-container">
       <div>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -70,10 +68,47 @@
         </svg>
       </div>
     </div>
-    <div class="nav__secondary-function-container"></div>
+    <div class="nav__secondary-function-container">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+        </svg>
+      </div>
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+        </svg>
+      </div>
+
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9" />
+        </svg>
+      </div>
+
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+          stroke="currentColor">
+          <path stroke-linecap=" round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </div>
+    </div>
   </nav>
   <div class="search">
-    <input class="search__input" type="text" placeholder="搜索" />
+    <div class="search__input-container">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input class="search__input" type="text" placeholder="搜索" />
+    </div>
     <button class="search__add-button">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -82,7 +117,7 @@
   </div>
   <menu>
     <div class="menu__name">
-      <p>全能型AI战马</p>
+      <p>鳄鱼2号</p>
       <div class="menu__status"></div>
     </div>
 
@@ -121,10 +156,10 @@
     </svg>
   </menu>
   <section class="chat-option">
-    <div class="chat-option__box chat-option__box--friend">
-      <img src="./markae-avatar.jpg" alt="Markae Avatar" />
-      <div class="chat-option__name-time-box">
-        <p class="chat-option__name">全能型AI战马</p>
+    <div class="chat-option__container chat-option__container--friend">
+      <img src="./img/avatar-1.jpg" alt="Markae Avatar" />
+      <div class="chat-option__name-time-container">
+        <p class="chat-option__name">鳄鱼1号</p>
         <p class="chat-option__time">20:08</p>
       </div>
       <div class="chat-option__message">
@@ -135,30 +170,25 @@
       </div>
     </div>
 
-    <div class="chat-option__box chat-option__box--friend">
-      <img src="./avatar.jpg" alt="Markae Avatar" />
-      <div class="chat-option__name-time-box">
-        <p class="chat-option__name">糕手耀</p>
-        <p class="chat-option__time">20:02</p>
+    <div class="chat-option__container chat-option__container--friend chat-option__container--active">
+      <img src="./img/avatar-2.jpg" alt="Markae Avatar" />
+      <div class="chat-option__name-time-container">
+        <p class="chat-option__name">鳄鱼2号</p>
+        <p class="chat-option__time">19:02</p>
       </div>
-      <div class="chat-option__message">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea nam
-        impedit magnam quod perspiciatis reprehenderit eligendi obcaecati
-        praesentium suscipit quaerat tenetur atque, sint voluptas. Sit cum
-        repellat ducimus asperiores consequuntur.
-      </div>
+      <div class="chat-option__message">Hello, 我是鳄鱼2号</div>
     </div>
   </section>
 
   <main>
-    <div class="main__user-message-box">
-      <div class="main__message">全能型AI战马</div>
-      <img class="main__avatar" src="./avatar.jpg" alt="User Avatar" />
+    <div class="main__user-message-container">
+      <div class="main__message">Hi, 我是用户<br />你看到的是mock数据</div>
+      <img class="main__avatar" src="./img/avatar-user.jpg" alt="User Avatar" />
     </div>
     <div class="main__time">昨天 07:56</div>
-    <div class="main__other-message-box">
-      <img class="main__avatar" src="./markae-avatar.jpg" alt="User Avatar" />
-      <div class="main__message main__message--other">全能型AI战马</div>
+    <div class="main__other-message-container">
+      <img class="main__avatar" src="./img/avatar-2.jpg" alt="User Avatar" />
+      <div class="main__message main__message--other">Hello, 我是鳄鱼2号</div>
     </div>
   </main>
 
@@ -194,14 +224,11 @@
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
       </svg>
-
-
     </div>
-    <textarea
-      id="user-input">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste quibusdam aliquid repellendus minus maiores explicabo nesciunt nihil eos quod deleniti voluptates, quis alias, dolorum blanditiis! Sit a dignissimos repellendus voluptatibus? Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure atque veniam fugiat perferendis? Vel nesciunt aperiam, tenetur animi maiores debitis deserunt officia eum corrupti aliquam ipsa placeat necessitatibus doloremque nisi.</textarea>
+    <textarea id="user-input">
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste quibusdam aliquid repellendus minus maiores explicabo nesciunt nihil eos quod deleniti voluptates, quis alias, dolorum blanditiis! Sit a dignissimos repellendus voluptatibus? Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure atque veniam fugiat perferendis? Vel nesciunt aperiam, tenetur animi maiores debitis deserunt officia eum corrupti aliquam ipsa placeat necessitatibus doloremque nisi.</textarea>
     <div class="input__submit">
-
-      <div class="input__submit-button-box">
+      <div class="input__submit-button-container">
         <div>发送</div>
         <div>|</div>
         <div>

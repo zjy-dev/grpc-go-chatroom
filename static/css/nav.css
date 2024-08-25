@@ -3,27 +3,29 @@ nav {
 
     background-color: #eaeaea;
     padding-top: 28px;
+    padding-bottom: 7px;
 
     display: flex;
     flex-direction: column;
     gap: 21px;
     align-items: center;
 }
-
-.nav__main-function-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 9px;
-}
-
 .nav__main-user-avator {
     width: 38px;
     height: 38px;
     border-radius: 50%;
 }
 
-.nav__main-function-container > div {
+.nav__main-function-container,
+.nav__secondary-function-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+}
+
+.nav__main-function-container > div,
+.nav__secondary-function-container > div {
     width: 38px;
     height: 38px;
     display: flex;
@@ -32,16 +34,22 @@ nav {
     border-radius: 10px;
 }
 
-.nav__main-function-container > div:hover {
+.nav__main-function-container > div:hover,
+nav__secondary-function-container > div:hover {
     background-color: #dedfe3;
 }
 
-.nav__main-function-container svg {
+nav svg {
     width: 24px;
     height: 24px;
 }
 
-.nav__main-function-container > div:hover > svg {
+.nav__main-function-container > div:hover > svg,
+.nav__secondary-function-container > div:hover > svg {
     stroke: #0093f5;
     fill: #0093f5;
+}
+
+.nav__secondary-function-container {
+    margin-top: auto;
 }
