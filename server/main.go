@@ -38,6 +38,7 @@ func main() {
 	// Serve frontend
 	mux.Handle("/static", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+
 	grpcServer := grpcServer()
 
 	if port == 0 {

@@ -1,0 +1,43 @@
+@use "common";
+
+menu {
+    grid-area: menu;
+
+    background-color: #f2f2f2;
+
+    font-size: 16px;
+
+    display: flex;
+    gap: 19px;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    padding: 0px 24px 16px 21px;
+    border-left: 1.5px solid rgb(233, 233, 233);
+
+    .menu__name {
+        font-weight: 500;
+        margin-right: auto;
+        display: flex;
+        gap: 6px;
+        justify-content: flex-start;
+    }
+
+    .menu__status {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        align-self: center;
+        background: radial-gradient(circle at 30% 30%, rgb(50, 236, 142), rgb(37, 230, 138), rgb(25, 224, 135));
+    }
+
+    svg {
+        width: 22px;
+        height: 22px;
+        stroke-width: 1.6;
+    }
+
+    svg:hover {
+        stroke: common.$subject-color;
+    }
+}

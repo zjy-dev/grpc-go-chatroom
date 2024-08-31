@@ -1,53 +1,137 @@
 main {
-    grid-area: main;
-    background-color: rgb(242, 242, 242);
-    border-left: 1px solid rgb(233, 233, 233);
-    border-top: 1px solid rgb(233, 233, 233);
-
-    display: flex;
-    justify-content: flex-start;
-
-    align-items: center;
-    flex-direction: column;
-    padding-top: 20px;
+  grid-area: main;
+  background-color: rgb(242, 242, 242);
+  border-left: 1px solid rgb(233, 233, 233);
+  border-top: 1px solid rgb(233, 233, 233);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+main .main__message-display {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 20px;
+  gap: 25px;
+}
+main .main__message-display .main__user-message-container {
+  align-self: flex-end;
+  margin-left: 60px;
+  margin-right: 20px;
+  display: flex;
+  gap: 10px;
+}
+main .main__message-display .main__other-message-container {
+  align-self: flex-end;
+  margin-left: 20px;
+  margin-right: 60px;
+  display: flex;
+  gap: 10px;
+}
+main .main__message-display .main__message--user {
+  background-color: #0093f5;
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 10px 11px 10px 11px;
+}
+main .main__message-display .main__message--other {
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: 400;
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 10px 11px 10px 11px;
+}
+main .main__message-display .main__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+main .main__message-display .main__time {
+  font-weight: 400;
+  font-size: 12px;
+  color: #999999;
+}
+main .main__input {
+  height: 208px;
+  width: 100%;
+  border-top: 1px solid rgb(233, 233, 233);
+  display: flex;
+  flex-direction: column;
+}
+main .main__input .input__toolbar {
+  display: flex;
+  gap: 17px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 11px 23px 0 23px;
+}
+main .main__input .input__toolbar svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.4;
+}
+main .main__input .input__toolbar svg:last-child {
+  margin-left: auto;
+}
+main .main__input .input__toolbar svg:hover {
+  stroke: #0093f5;
+}
+main .main__input textarea {
+  font-family: "Inter", sans-serif;
+  background-color: rgb(242, 242, 242);
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  resize: none;
+  border: none;
+  outline: none;
+  overflow: auto;
+  padding: 5px 23px 0 23px;
+}
+main .main__input .input__submit {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  padding-right: 20px;
+}
+main .main__input .input__submit .input__submit-button-container {
+  border-radius: 4px;
+  background-color: #0093f5;
+  color: #ffffff;
+  width: 96px;
+  height: 26px;
+  display: flex;
+  font-size: 13px;
+  font-weight: 400;
+  align-items: center;
+  padding: 2px 4px 2px 4px;
+}
+main .main__input .input__submit .input__submit-button-container svg {
+  width: 14px;
+  height: 14px;
+}
+main .main__input .input__submit .input__submit-button-container div:nth-child(1) {
+  line-height: 22px;
+  text-align: center;
+  width: 64px;
+}
+main .main__input .input__submit .input__submit-button-container div:nth-child(2) {
+  line-height: 22px;
+  font-weight: 100;
+  text-align: center;
+  flex: 1;
+}
+main .main__input .input__submit .input__submit-button-container div:nth-child(3) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
 }
 
-.main__user-message-container {
-    align-self: flex-end;
-    margin-right: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.main__message {
-    background-color: #0099ff;
-    color: #ffffff;
-    font-weight: 400;
-    font-size: 13px;
-    border-radius: 8px;
-    padding: 10px 11px 10px 11px;
-}
-
-.main__other-message-container {
-    align-self: flex-start;
-    margin-left: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.main__message--other {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-.main__avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-}
-
-.main__time {
-    font-weight: 400;
-    font-size: 12px;
-    color: #999999;
-}
+/*# sourceMappingURL=main.css.map */

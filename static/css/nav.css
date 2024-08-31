@@ -1,55 +1,46 @@
+nav .nav__secondary-function-container, nav .nav__main-function-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+nav .nav__secondary-function-container div, nav .nav__main-function-container div {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+nav .nav__secondary-function-container div svg, nav .nav__main-function-container div svg {
+  width: 24px;
+  height: 24px;
+}
+nav .nav__secondary-function-container div:hover, nav .nav__main-function-container div:hover {
+  background-color: #dedfe3;
+}
+nav .nav__secondary-function-container div:hover > svg, nav .nav__main-function-container div:hover > svg {
+  stroke: #0093f5;
+  fill: #0093f5;
+}
+
 nav {
-    grid-area: nav;
-
-    background-color: #eaeaea;
-    padding-top: 28px;
-    padding-bottom: 7px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 21px;
-    align-items: center;
+  grid-area: nav;
+  background-color: #eaeaea;
+  padding-top: 28px;
+  padding-bottom: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  align-items: center;
 }
-.nav__main-user-avator {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
+nav .nav__main-user-avator {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
 }
-
-.nav__main-function-container,
-.nav__secondary-function-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 9px;
+nav .nav__secondary-function-container {
+  margin-top: auto;
 }
 
-.nav__main-function-container > div,
-.nav__secondary-function-container > div {
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-}
-
-.nav__main-function-container > div:hover,
-nav__secondary-function-container > div:hover {
-    background-color: #dedfe3;
-}
-
-nav svg {
-    width: 24px;
-    height: 24px;
-}
-
-.nav__main-function-container > div:hover > svg,
-.nav__secondary-function-container > div:hover > svg {
-    stroke: #0093f5;
-    fill: #0093f5;
-}
-
-.nav__secondary-function-container {
-    margin-top: auto;
-}
+/*# sourceMappingURL=nav.css.map */

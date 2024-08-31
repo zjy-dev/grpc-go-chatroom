@@ -1,0 +1,32 @@
+// styles.scss
+
+@use "common";
+
+// ANCHOR 变量
+// 各组件的尺寸
+$nav-width: 60px; // 左侧导航栏宽度
+$chat_option-width: 280px; // 选择聊天对象的侧栏 的宽度
+
+$search-height: 66px; // 搜索栏以及菜单栏的高度
+
+// ANCHOR 样式
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: common.$font-stack;
+    color: common.$primary-font-color;
+    height: 100vh;
+
+    display: grid;
+    grid-template-areas:
+        "nav search      menu "
+        "nav chat_option main ";
+
+    grid-template-columns: $nav-width $chat_option-width 1fr;
+    grid-template-rows: $search-height 1fr;
+}

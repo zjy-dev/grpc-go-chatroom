@@ -1,0 +1,94 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: #000000;
+  height: 100vh;
+  background-color: #eceef0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  width: 912px;
+  height: 520px;
+  background-color: #ffffff;
+  border-radius: 24px;
+  box-shadow: none;
+  position: relative;
+}
+.login .login__logo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 35px;
+  position: absolute;
+  top: 30px;
+  left: 32px;
+  font-weight: 600;
+}
+.login .login__logo svg {
+  width: 24px;
+  height: 24px;
+  fill: rgb(120, 208, 222);
+  margin-right: 10px;
+}
+.login .login__input {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  width: 441px;
+  padding: 16px;
+}
+.login .login__input h6 {
+  text-align: center;
+  height: 32px;
+  line-height: 32px;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 32px;
+}
+.login .login__input input {
+  width: 324px;
+  height: 40px;
+  border-radius: 50px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: #f2f2f2;
+  margin-bottom: 24px;
+  padding: 16px;
+}
+.login .login__input input:focus {
+  border: 1px solid black;
+}
+.login .login__input button {
+  width: 324px;
+  height: 40px;
+  border-radius: 50px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: rgb(39, 39, 39);
+  margin-bottom: 24px;
+  color: #ffffff;
+  text-align: center;
+  line-height: 40px;
+}
+.login .login__input button:hover {
+  background-color: rgb(79, 79, 79);
+}
+
+/*# sourceMappingURL=login.css.map */

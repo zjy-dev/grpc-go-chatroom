@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: #000000;
+  height: 100vh;
+  display: grid;
+  grid-template-areas: "nav search      menu " "nav chat_option main ";
+  grid-template-columns: 60px 280px 1fr;
+  grid-template-rows: 66px 1fr;
+}
+
+/*# sourceMappingURL=style.css.map */

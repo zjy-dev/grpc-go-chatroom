@@ -1,0 +1,165 @@
+@use "common";
+
+// ANCHOR 变量
+$input-height: 208px; // 输入框的高度
+
+// ANCHOR MIXINs(类似于函数, 详见sass[官方文档](https://sass-lang.com/guide/#mixins))
+@mixin message-container($_margin-left: 0, $_margin-right: 20px) {
+    align-self: flex-end;
+    margin-left: $_margin-left;
+    margin-right: $_margin-right;
+    display: flex;
+    gap: 10px;
+}
+
+@mixin message($font-color: #ffffff, $_background-color: common.$subject-color) {
+    background-color: $_background-color;
+    color: $font-color;
+    font-weight: 400;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 10px 11px 10px 11px;
+}
+
+main {
+    grid-area: main;
+    background-color: rgb(242, 242, 242);
+    border-left: 1px solid rgb(233, 233, 233);
+    border-top: 1px solid rgb(233, 233, 233);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    .main__message-display {
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+
+        align-items: center;
+        flex-direction: column;
+        padding-top: 20px;
+        gap: 25px;
+
+        .main__user-message-container {
+            @include message-container($_margin-left: 60px, $_margin-right: 20px);
+        }
+
+        .main__other-message-container {
+            @include message-container($_margin-left: 20px, $_margin-right: 60px);
+        }
+
+        .main__message--user {
+            @include message;
+        }
+
+        .main__message--other {
+            @include message($font-color: #000000, $_background-color: #ffffff);
+        }
+
+        .main__avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .main__time {
+            font-weight: 400;
+            font-size: 12px;
+            color: #999999;
+        }
+    }
+
+    .main__input {
+        height: $input-height;
+        width: 100%;
+        border-top: 1px solid rgb(233, 233, 233);
+
+        display: flex;
+        flex-direction: column;
+
+        .input__toolbar {
+            display: flex;
+            gap: 17px;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 11px 23px 0 23px;
+
+            svg {
+                width: 24px;
+                height: 24px;
+                stroke-width: 1.4;
+            }
+
+            svg:last-child {
+                margin-left: auto;
+            }
+
+            svg:hover {
+                stroke: common.$subject-color;
+            }
+        }
+
+        textarea {
+            font-family: "Inter", sans-serif;
+            background-color: rgb(242, 242, 242);
+
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            resize: none;
+
+            border: none;
+            outline: none;
+            overflow: auto;
+
+            padding: 5px 23px 0 23px;
+        }
+
+        .input__submit {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+            padding-right: 20px;
+
+            .input__submit-button-container {
+                border-radius: 4px;
+                background-color: common.$subject-color;
+                color: #ffffff;
+                width: 96px;
+                height: 26px;
+                display: flex;
+                font-size: 13px;
+                font-weight: 400;
+                align-items: center;
+                padding: 2px 4px 2px 4px;
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                div:nth-child(1) {
+                    line-height: 22px;
+                    text-align: center;
+                    width: 64px;
+                }
+
+                div:nth-child(2) {
+                    line-height: 22px;
+
+                    font-weight: 100;
+                    text-align: center;
+                    flex: 1;
+                }
+
+                div:nth-child(3) {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 30px;
+                }
+            }
+        }
+    }
+}
