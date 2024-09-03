@@ -16,10 +16,10 @@
     "application/json"
   ],
   "paths": {
-    "/login": {
+    "/login-or-register": {
       "post": {
-        "summary": "Log in to the chatroom",
-        "description": "Very simple log in interface, it takes a username and returns a JWT token.",
+        "summary": "Log in (auto register) to the chatroom",
+        "description": "If the username is not registered, it will be registered automatically. Otherwise, log in straightforwardly.",
         "operationId": "ChatService_LogInOrRegister",
         "responses": {
           "200": {
@@ -79,6 +79,13 @@
             "schema": {
               "$ref": "#/definitions/v1LogOutRequest"
             }
+          },
+          {
+            "name": "Authorization",
+            "description": "JWT token, format: `bearer \u003ctoken\u003e`",
+            "in": "header",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [

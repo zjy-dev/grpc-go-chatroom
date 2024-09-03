@@ -8,7 +8,7 @@ import (
 )
 
 func InsertMessage(db *sql.DB, userID int, username, message string) (id int64, err error) {
-	ret, err := db.Exec("INSERT INTO messages (user_id, username, message) VALUES (?, ?, ?);",
+	ret, err := db.Exec("INSERT INTO `messages` (user_id, username, message) VALUES (?, ?, ?);",
 		userID, username, message)
 	if err != nil {
 		return 0, fmt.Errorf("failed to insert to database: %v", err)
@@ -22,7 +22,7 @@ func InsertMessage(db *sql.DB, userID int, username, message string) (id int64, 
 }
 
 func GetMessages(db *sql.DB) ([]*pb.Message, error) {
-	query := "SELECT id, user_id, username, message, created_at FROM messages;"
+	query := "SELECT id, user_id, username, message, created_at FROM `messages`;"
 	rows, err := db.Query(query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get messages: %v", err)

@@ -29,7 +29,7 @@ func TestInsertMessage(t *testing.T) {
 			username: "testuser",
 			message:  "Hello, World!",
 			mockBehavior: func(mock sqlmock.Sqlmock) {
-				mock.ExpectExec("INSERT INTO messages \\(user_id, username, message\\) VALUES \\(\\?, \\?, \\?\\);").
+				mock.ExpectExec("INSERT INTO `messages` \\(user_id, username, message\\) VALUES \\(\\?, \\?, \\?\\);").
 					WithArgs(1, "testuser", "Hello, World!").
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
@@ -42,7 +42,7 @@ func TestInsertMessage(t *testing.T) {
 			username: "testuser",
 			message:  "Hello, World!",
 			mockBehavior: func(mock sqlmock.Sqlmock) {
-				mock.ExpectExec("INSERT INTO messages \\(user_id, username, message\\) VALUES \\(\\?, \\?, \\?\\);").
+				mock.ExpectExec("INSERT INTO `messages` \\(user_id, username, message\\) VALUES \\(\\?, \\?, \\?\\);").
 					WithArgs(1, "testuser", "Hello, World!").
 					WillReturnError(errors.New("insert failed"))
 			},
@@ -55,7 +55,7 @@ func TestInsertMessage(t *testing.T) {
 			username: "testuser",
 			message:  "Hello, World!",
 			mockBehavior: func(mock sqlmock.Sqlmock) {
-				mock.ExpectExec("INSERT INTO messages \\(user_id, username, message\\) VALUES \\(\\?, \\?, \\?\\);").
+				mock.ExpectExec("INSERT INTO `messages` \\(user_id, username, message\\) VALUES \\(\\?, \\?, \\?\\);").
 					WithArgs(1, "testuser", "Hello, World!").
 					WillReturnResult(sqlmock.NewResult(1, 1)).
 					WillReturnError(errors.New("failed to get last inserted message ID"))
@@ -107,7 +107,7 @@ func TestGetMessages(t *testing.T) {
 			mockBehavior: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{"id", "user_id", "username", "message", "created_at"}).
 					AddRow(1, 1, "testuser", "Hello, World!", "2024-08-15 00:00:00")
-				mock.ExpectQuery("SELECT id, user_id, username, message, created_at FROM messages;").
+				mock.ExpectQuery("SELECT id, user_id, username, message, created_at FROM `messages`;").
 					WillReturnRows(rows)
 			},
 			expected: []*pb.Message{
@@ -122,7 +122,7 @@ func TestGetMessages(t *testing.T) {
 		{
 			name: "Query Failure",
 			mockBehavior: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery("SELECT id, user_id, username, message, created_at FROM messages;").
+				mock.ExpectQuery("SELECT id, user_id, username, message, created_at FROM `messages`;").
 					WillReturnError(errors.New("query failed"))
 			},
 			expected:  nil,
@@ -133,7 +133,7 @@ func TestGetMessages(t *testing.T) {
 			mockBehavior: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{"id", "user_id", "username", "message", "created_at"}).
 					AddRow(1, 1, "testuser", "Hello, World!", "2024-08-15 00:00:00")
-				mock.ExpectQuery("SELECT id, user_id, username, message FROM messages;").
+				mock.ExpectQuery("SELECT id, user_id, username, message FROM `messages`;").
 					WillReturnRows(rows)
 			},
 			expected:  nil,

@@ -1,4 +1,4 @@
-package service
+package logic
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"time"
 
 	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/config"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/db"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/jwt"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/util"
@@ -23,7 +24,7 @@ var (
 
 func dBConn() *sql.DB {
 	if dbConn == nil {
-		dbConn = db.MustConnect("127.0.0.1", 3306, "grpc_go_chatroom")
+		dbConn = db.MustConnect(config.Mysql.User, config.Mysql.Password, config.Mysql.Host, config.Mysql.Port, config.Mysql.DBName)
 	}
 	return dbConn
 }
@@ -45,7 +46,7 @@ type client struct {
 
 func NewChatServiceServer() *chatServiceServer {
 	server := &chatServiceServer{
-		clientsMap:  make(map[string]client),
+		clientsMap:  make(map[string]client, 64),
 		receiveChan: make(chan *pb.Message, 1024),
 		mu:          sync.Mutex{},
 	}

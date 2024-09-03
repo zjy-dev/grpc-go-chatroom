@@ -4,6 +4,6 @@ SELECT
     username,
     message,
     created_at
-FROM chat_messages
+FROM messages
 WHERE
     username = ?;

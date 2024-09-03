@@ -1,6 +1,8 @@
-USE `grpc_go_chatroom`;
+CREATE DATABASE IF NOT EXISTS `grpc_go_chatroom`;
 
-CREATE TABLE `user` (
+use `grpc_go_chatroom`;
+
+CREATE TABLE `users` (
     `id` int NOT NULL AUTO_INCREMENT COMMENT '用户唯一标识符',
     `username` varchar(255) NOT NULL UNIQUE COMMENT '用户名，必须唯一',
     `password_hash` varchar(255) NOT NULL COMMENT '用户密码的哈希值',
@@ -9,4 +11,10 @@ CREATE TABLE `user` (
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO `user` (`username`, `password_hash`) VALUES (?, ?);
+CREATE TABLE IF NOT EXISTS `messages` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `username` VARCHAR(255) NOT NULL,
+    `messages` TEXT NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

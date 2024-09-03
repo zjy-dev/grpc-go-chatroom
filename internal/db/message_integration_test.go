@@ -4,10 +4,10 @@ package db
 
 import (
 	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/config"
 )
 
 func TestMain(m *testing.M) {
@@ -23,13 +23,9 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetMessagesIntegration(t *testing.T) {
-	tmpDir := t.TempDir()
-	p := filepath.Join(tmpDir, "get_messages.sql")
-	// TODO: Figure out os.Mode*
-	os.WriteFile(p, []byte("SELECT id, user_id, username, message, created_at FROM chat_messages;"), os.ModePerm)
 	require := require.New(t)
 
-	dbConn := MustConnect("127.0.0.1", 3306, "grpc_go_chatroom")
+	dbConn := MustConnect(config.Mysql.User, config.Mysql.Password, config.Mysql.Host, config.Mysql.Port, config.Mysql.DBName)
 
 	res, err := GetMessages(dbConn)
 	require.NotEmpty(res)
@@ -38,7 +34,7 @@ func TestGetMessagesIntegration(t *testing.T) {
 
 func TestInsertMessageIntegration(t *testing.T) {
 	require := require.New(t)
-	dbConn := MustConnect("127.0.0.1", 3306, "grpc_go_chatroom")
+	dbConn := MustConnect(config.Mysql.User, config.Mysql.Password, config.Mysql.Host, config.Mysql.Port, config.Mysql.DBName)
 
 	t.Cleanup(func() {
 		dbConn.Close()

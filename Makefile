@@ -56,7 +56,7 @@ integration-test:
 coverage:
 	# TODO: Make this more graceful
 	@go clean -testcache
-	go test -tags="unit_test" -cover ./server ./internal/*
+	go test -tags="unit_test" -cover ./server ./internal/* ./logic
 
 .PHONY: coverage-html
 coverage-html:

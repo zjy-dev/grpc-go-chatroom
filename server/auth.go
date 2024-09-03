@@ -5,8 +5,8 @@ import (
 
 	authmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/jwt"
-	"github.com/zjy-dev/grpc-go-chatroom/internal/service"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/util"
+	"github.com/zjy-dev/grpc-go-chatroom/logic"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -37,5 +37,5 @@ func authFunc(ctx context.Context) (context.Context, error) {
 		return nil, status.Errorf(codes.Unauthenticated, "username in jwt is empty")
 	}
 
-	return context.WithValue(ctx, service.JWTContextKey, subject), nil
+	return context.WithValue(ctx, logic.JWTContextKey, subject), nil
 }

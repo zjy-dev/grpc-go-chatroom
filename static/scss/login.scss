@@ -2,17 +2,25 @@
 
 @use "common";
 
-$page-background-color: #eceef0;
+@font-face {
+    font-family: "Ambit";
+    src: url("../font/ambit/Ambit\ Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+$page-background-color: rgb(242, 242, 242);
 $login-container-background-color: #ffffff;
 
 @mixin form-element($_background-color: #f2f2f2) {
     width: 324px;
     height: 40px;
+    line-height: 23px;
     border-radius: 50px;
     outline: none;
     border: none;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: normal;
     background-color: $_background-color;
 
     margin-bottom: 24px;
@@ -47,6 +55,9 @@ body {
     box-shadow: none;
 
     position: relative;
+    box-shadow:
+        0px 12px 32px 4px rgba(0, 0, 0, 0.04),
+        0px 8px 20px rgba(0, 0, 0, 0.08);
     .login__logo {
         display: flex;
         justify-content: flex-start;
@@ -68,12 +79,13 @@ body {
     }
 
     .login__input {
+        align-self: flex-start;
         display: flex;
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
         width: 441px;
-        padding: 16px;
+        padding: 135px 16px 16px 16px;
 
         h6 {
             text-align: center;
@@ -85,24 +97,65 @@ body {
         }
 
         input {
-            @include form-element($_background-color: #f2f2f2);
-            padding: 16px;
+            @include form-element($_background-color: rgb(246, 246, 246));
+            font-family: "Ambit", common.$font-stack;
+            padding: 4px 0 0 18px;
         }
 
         input:focus {
-            border: 1px solid black;
+            box-shadow: 0 0 0 1px #409eff inset;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         button {
             @include form-element($_background-color: rgb(39, 39, 39));
             color: #ffffff;
 
+            letter-spacing: 0.1em;
             text-align: center;
-            line-height: 40px;
+            margin-bottom: 40px;
         }
 
         button:hover {
             background-color: rgb(79, 79, 79);
         }
+
+        hr {
+            width: 324px;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.12);
+            border: none;
+        }
+
+        .login__other {
+            padding: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 324px;
+
+            a {
+                font-family: "Ambit", common.$font-stack;
+                font-weight: normal;
+                font-size: 14px;
+                color: rgb(39, 39, 39);
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+    .login__img {
+        flex: 1;
+        height: calc(100% - 30px);
+        margin-right: 15px;
+        background-image: url(../img/logo.png);
+        background-position: center;
+        background-size: cover;
+        border-radius: 24px;
     }
 }

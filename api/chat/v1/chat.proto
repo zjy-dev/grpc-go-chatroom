@@ -50,13 +50,13 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service ChatService {
   rpc LogInOrRegister(LogInOrRegisterRequest) returns (LogInOrRegisterResponse) {
     option (google.api.http) = {
-      post: "/login"
+      post: "/login-or-register"
       body: "*"
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Log in to the chatroom"
-      description: "Very simple log in interface, it takes a username and returns a JWT token."
+      summary: "Log in (auto register) to the chatroom"
+      description: "If the username is not registered, it will be registered automatically. Otherwise, log in straightforwardly."
       security: {}
     };
   }
@@ -69,6 +69,14 @@ service ChatService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Log out from the chatroom"
       description: "Must carry a JWT token in header.\nReturn nothing, client should close the websocket or grpc connection after calling this."
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "JWT token, format: `bearer <token>`"
+          type: STRING
+          required: true
+        }
+      }
     };
   }
 

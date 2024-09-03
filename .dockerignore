@@ -28,5 +28,6 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/*.txt
 LICENSE
 README.md

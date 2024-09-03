@@ -13,7 +13,7 @@ type User struct {
 
 // InsertUser inserts a new user into the database, and returns the new user's ID.
 func InsertUser(db *sql.DB, username, password_hash string) (int64, error) {
-	ret, err := db.Exec("INSERT INTO `user` (`username`, `password_hash`) VALUES (?, ?);",
+	ret, err := db.Exec("INSERT INTO `users` (`username`, `password_hash`) VALUES (?, ?);",
 		username, password_hash)
 	if err != nil {
 		return 0, fmt.Errorf("failed to insert user to database: %v", err)
@@ -23,7 +23,7 @@ func InsertUser(db *sql.DB, username, password_hash string) (int64, error) {
 
 // UserExistsByName checks if a user exists in the database
 func UserExistsByName(db *sql.DB, username string) (bool, error) {
-	query := "SELECT id FROM `user` WHERE username = ?;"
+	query := "SELECT id FROM `users` WHERE username = ?;"
 
 	row := db.QueryRow(query, username)
 
@@ -39,7 +39,7 @@ func UserExistsByName(db *sql.DB, username string) (bool, error) {
 }
 
 func GetUserByUsername(db *sql.DB, username string) (*User, error) {
-	query := "SELECT id, username, password_hash FROM `user` WHERE username = ?;"
+	query := "SELECT id, username, password_hash FROM `users` WHERE username = ?;"
 
 	row := db.QueryRow(query, username)
 

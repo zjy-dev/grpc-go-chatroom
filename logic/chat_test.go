@@ -1,6 +1,6 @@
 //go:build unit_test
 
-package service
+package logic
 
 import (
 	"context"
@@ -63,11 +63,11 @@ func TestLogInOrRegister(t *testing.T) {
 			},
 			alreadyLoggedIn: false,
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery("SELECT id FROM `user` WHERE username = ?").
+				mock.ExpectQuery("SELECT id FROM `users` WHERE username = ?").
 					WithArgs("newuser").
 					WillReturnRows(sqlmock.NewRows([]string{"id"})) // No rows returned
 
-				mock.ExpectExec("INSERT INTO `user` \\(`username`, `password_hash`\\) VALUES \\(\\?, \\?\\);").
+				mock.ExpectExec("INSERT INTO `users` \\(`username`, `password_hash`\\) VALUES \\(\\?, \\?\\);").
 					WithArgs("newuser", sqlmock.AnyArg()).
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
@@ -96,13 +96,13 @@ func TestLogInOrRegister(t *testing.T) {
 			},
 			alreadyLoggedIn: false,
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery("SELECT id FROM `user` WHERE username = ?").
+				mock.ExpectQuery("SELECT id FROM `users` WHERE username = ?").
 					WithArgs("existinguser").
 					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 				hashedPassword, err := util.HashPassword("password123")
 				require.NoError(err)
-				mock.ExpectQuery("SELECT id, username, password_hash FROM `user` WHERE username = ?").
+				mock.ExpectQuery("SELECT id, username, password_hash FROM `users` WHERE username = ?").
 					WithArgs("existinguser").
 					WillReturnRows(sqlmock.NewRows([]string{"id", "username", "password_hash"}).
 						AddRow(1, "existinguser", hashedPassword))
@@ -119,12 +119,12 @@ func TestLogInOrRegister(t *testing.T) {
 			},
 			alreadyLoggedIn: false,
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery("SELECT id FROM `user` WHERE username = ?").
+				mock.ExpectQuery("SELECT id FROM `users` WHERE username = ?").
 					WithArgs("existinguser").
 					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 
 				hashedPassword, _ := util.HashPassword("password123") // Correct password
-				mock.ExpectQuery("SELECT id, username, password_hash FROM `user` WHERE username = ?").
+				mock.ExpectQuery("SELECT id, username, password_hash FROM `users` WHERE username = ?").
 					WithArgs("existinguser").
 					WillReturnRows(sqlmock.NewRows([]string{"id", "username", "password_hash"}).
 						AddRow(1, "existinguser", hashedPassword))
@@ -279,7 +279,7 @@ func TestChat(t *testing.T) {
 
 		// Mock InsertMessage calls
 		for range 5 {
-			mock.ExpectExec("INSERT INTO messages (user_id, username, message) VALUES (?, ?, ?);").
+			mock.ExpectExec("INSERT INTO `messages` (user_id, username, message) VALUES (?, ?, ?);").
 				WithArgs(42, sqlmock.AnyArg(), sqlmock.AnyArg()).
 				WillReturnResult(sqlmock.NewResult(1, 1))
 		}

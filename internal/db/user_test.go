@@ -1,3 +1,5 @@
+//go:build unit_test
+
 package db
 
 import (
@@ -25,7 +27,7 @@ func TestInsertUser(t *testing.T) {
 			username: "newuser",
 			password: "hashedPassword",
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectExec("INSERT INTO `user` \\(`username`, `password_hash`\\) VALUES \\(\\?, \\?\\);").
+				mock.ExpectExec("INSERT INTO `users` \\(`username`, `password_hash`\\) VALUES \\(\\?, \\?\\);").
 					WithArgs("newuser", "hashedPassword").
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
@@ -37,7 +39,7 @@ func TestInsertUser(t *testing.T) {
 			username: "newuser",
 			password: "hashedPassword",
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectExec("INSERT INTO `user` \\(`username`, `password_hash`\\) VALUES \\(\\?, \\?\\);").
+				mock.ExpectExec("INSERT INTO `users` \\(`username`, `password_hash`\\) VALUES \\(\\?, \\?\\);").
 					WithArgs("newuser", "hashedPassword").
 					WillReturnError(errors.New("insert failed"))
 			},
@@ -78,7 +80,7 @@ func TestUserExistsByName(t *testing.T) {
 			username: "existinguser",
 			mockSetup: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{"id"}).AddRow(1)
-				mock.ExpectQuery("SELECT id FROM `user` WHERE username = \\?;").
+				mock.ExpectQuery("SELECT id FROM `users` WHERE username = \\?;").
 					WithArgs("existinguser").
 					WillReturnRows(rows)
 			},
@@ -89,7 +91,7 @@ func TestUserExistsByName(t *testing.T) {
 			name:     "User Does Not Exist",
 			username: "nonexistentuser",
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery("SELECT id FROM `user` WHERE username = \\?;").
+				mock.ExpectQuery("SELECT id FROM `users` WHERE username = \\?;").
 					WithArgs("nonexistentuser").
 					WillReturnError(sql.ErrNoRows)
 			},
@@ -100,7 +102,7 @@ func TestUserExistsByName(t *testing.T) {
 			name:     "Query Error",
 			username: "erroruser",
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery("SELECT id FROM `user` WHERE username = \\?;").
+				mock.ExpectQuery("SELECT id FROM `users` WHERE username = \\?;").
 					WithArgs("erroruser").
 					WillReturnError(errors.New("query failed"))
 			},
@@ -142,7 +144,7 @@ func TestGetUserByUsername(t *testing.T) {
 			mockSetup: func(mock sqlmock.Sqlmock) {
 				rows := sqlmock.NewRows([]string{"id", "username", "password_hash"}).
 					AddRow(1, "existinguser", "hashedPassword")
-				mock.ExpectQuery("SELECT id, username, password_hash FROM `user` WHERE username = \\?;").
+				mock.ExpectQuery("SELECT id, username, password_hash FROM `users` WHERE username = \\?;").
 					WithArgs("existinguser").
 					WillReturnRows(rows)
 			},
@@ -157,7 +159,7 @@ func TestGetUserByUsername(t *testing.T) {
 			name:     "User Not Found",
 			username: "nonexistentuser",
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery("SELECT id, username, password_hash FROM `user` WHERE username = \\?;").
+				mock.ExpectQuery("SELECT id, username, password_hash FROM `users` WHERE username = \\?;").
 					WithArgs("nonexistentuser").
 					WillReturnError(sql.ErrNoRows)
 			},
@@ -168,7 +170,7 @@ func TestGetUserByUsername(t *testing.T) {
 			name:     "Query Error",
 			username: "erroruser",
 			mockSetup: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery("SELECT id, username, password_hash FROM `user` WHERE username = \\?;").
+				mock.ExpectQuery("SELECT id, username, password_hash FROM `users` WHERE username = \\?;").
 					WithArgs("erroruser").
 					WillReturnError(errors.New("query failed"))
 			},

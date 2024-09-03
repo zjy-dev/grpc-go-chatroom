@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/config"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/tokensource"
 
 	"github.com/gorilla/websocket"
@@ -31,7 +32,7 @@ type WebSocketServer struct {
 
 func mustNewGRPCClient() (*grpc.ClientConn, pb.ChatServiceClient) {
 	// Create a new client connection to the server
-	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", port),
+	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", config.Server.Port),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {

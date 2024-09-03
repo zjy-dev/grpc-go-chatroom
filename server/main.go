@@ -6,31 +6,17 @@ import (
 	"net/http"
 	"strings"
 
-	"embed"
-
 	authmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
-	"github.com/spf13/viper"
 	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/config"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/middleware"
-	"github.com/zjy-dev/grpc-go-chatroom/internal/service"
-	"github.com/zjy-dev/grpc-go-chatroom/internal/util"
+	"github.com/zjy-dev/grpc-go-chatroom/logic"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
 )
 
-var (
-	port      int64
-	mysqlHost string
-	mysqlPort int64
-	dbName    string
-
-	//go:embed config.yaml
-	configFS embed.FS
-)
-
 func main() {
-	loadConfigs()
 	// Serve websocket & gRPC-gateway
 	mux := websocketMux()
 	mux.Handle("/", gatewayMux())
@@ -41,11 +27,11 @@ func main() {
 
 	grpcServer := grpcServer()
 
-	if port == 0 {
+	if config.Server.Port == 0 {
 		log.Fatalf("server.port is not set or invalid, check config.yaml")
 	}
-	log.Printf("server will listen at 0.0.0.0:%d", port)
-	log.Fatalln(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), combinedProtocolHandler(grpcServer, mux)))
+	log.Printf("server will listen at 0.0.0.0:%d", config.Server.Port)
+	log.Fatalln(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", config.Server.Port), combinedProtocolHandler(grpcServer, mux)))
 }
 
 func combinedProtocolHandler(grpcServer *grpc.Server, gatewayAndWebsocketMux *http.ServeMux) http.Handler {
@@ -64,38 +50,10 @@ func grpcServer() *grpc.Server {
 	grpcServer := grpc.NewServer(
 		grpc.ChainStreamInterceptor(authmiddleware.StreamServerInterceptor(authFunc)),
 		// Exclude the "LogIn" method from authentication.
-		grpc.UnaryInterceptor(middleware.UnaryServerAuthInterceptorWithBypassMethods(authFunc, "LogIn")),
+		grpc.UnaryInterceptor(middleware.UnaryServerAuthInterceptorWithBypassMethods(authFunc, "LogInOrRegister")),
 	)
 
-	pb.RegisterChatServiceServer(grpcServer, service.NewChatServiceServer())
+	pb.RegisterChatServiceServer(grpcServer, logic.NewChatServiceServer())
 
 	return grpcServer
-}
-
-func loadConfigs() {
-	util.MustLoadEnvFile()
-
-	content, err := configFS.ReadFile("config.yaml")
-	if err != nil || len(content) == 0 {
-		log.Fatalf("failed to read embed config file: %v", err)
-	}
-
-	config := viper.New()
-	config.SetConfigFile("config.yaml")
-	config.SetConfigType("yaml")
-
-	configFile, err := configFS.Open("config.yaml")
-	if err != nil {
-		log.Fatalf("failed to open embed config file: %v", err)
-	}
-
-	err = config.ReadConfig(configFile)
-	if err != nil {
-		log.Fatalf("failed to read config: %v", err)
-	}
-
-	port = int64(config.GetInt("server.port"))
-	if port == 0 {
-		log.Fatalf("server.port is not set or invalid, check config.yaml")
-	}
 }

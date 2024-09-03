@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/spf13/viper"
 	"github.com/urfave/cli/v2"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/config"
 	"github.com/zjy-dev/grpc-go-chatroom/internal/tokensource"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -19,7 +19,6 @@ import (
 )
 
 var (
-	port     int64
 	username string
 	token    string
 )
@@ -112,7 +111,7 @@ func chat(client pb.ChatServiceClient) {
 func mustNewClient() (*grpc.ClientConn, pb.ChatServiceClient) {
 
 	// Create a new client connection to the server
-	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", port),
+	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", config.Server.Port),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
@@ -149,13 +148,12 @@ func main() {
 		},
 		// Define the flags for the app
 		Flags: []cli.Flag{
-
-			&cli.Int64Flag{
+			&cli.Uint64Flag{
 				Name:        "port",
 				Aliases:     []string{"p"},
-				Value:       8082,
+				Value:       config.Server.Port,
 				Usage:       "the server port",
-				Destination: &port,
+				Destination: nil,
 			},
 
 			&cli.StringFlag{
@@ -171,25 +169,5 @@ func main() {
 	// Run the cli app
 	if err := chatroomClient.Run(os.Args); err != nil {
 		log.Fatal(err)
-	}
-}
-
-func init() {
-	config := viper.New()
-
-	config.AddConfigPath(".")
-	config.AddConfigPath("..")
-	config.AddConfigPath("./config")
-	config.AddConfigPath("../config")
-	config.SetConfigName("config")
-	config.SetConfigType("yaml")
-
-	if err := config.ReadInConfig(); err != nil {
-		log.Fatalf("failed to read config: %v", err)
-	}
-
-	port = int64(config.GetInt("server.port"))
-	if port == 0 {
-		log.Fatalf("server.port is not set or invalid, check config.yaml")
 	}
 }

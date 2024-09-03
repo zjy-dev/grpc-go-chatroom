@@ -1,3 +1,9 @@
+@font-face {
+  font-family: "Ambit";
+  src: url("../font/ambit/Ambit Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
 * {
   margin: 0;
   padding: 0;
@@ -8,7 +14,7 @@ body {
   font-family: "Inter", sans-serif;
   color: #000000;
   height: 100vh;
-  background-color: #eceef0;
+  background-color: rgb(242, 242, 242);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,6 +31,7 @@ body {
   border-radius: 24px;
   box-shadow: none;
   position: relative;
+  box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, 0.04), 0px 8px 20px rgba(0, 0, 0, 0.08);
 }
 .login .login__logo {
   display: flex;
@@ -43,12 +50,13 @@ body {
   margin-right: 10px;
 }
 .login .login__input {
+  align-self: flex-start;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   width: 441px;
-  padding: 16px;
+  padding: 135px 16px 16px 16px;
 }
 .login .login__input h6 {
   text-align: center;
@@ -61,34 +69,73 @@ body {
 .login .login__input input {
   width: 324px;
   height: 40px;
+  line-height: 23px;
   border-radius: 50px;
   outline: none;
   border: none;
   font-size: 16px;
-  font-weight: 400;
-  background-color: #f2f2f2;
+  font-weight: normal;
+  background-color: rgb(246, 246, 246);
   margin-bottom: 24px;
-  padding: 16px;
+  font-family: "Ambit", "Inter", sans-serif;
+  padding: 4px 0 0 18px;
 }
 .login .login__input input:focus {
-  border: 1px solid black;
+  box-shadow: 0 0 0 1px #409eff inset;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .login .login__input button {
   width: 324px;
   height: 40px;
+  line-height: 23px;
   border-radius: 50px;
   outline: none;
   border: none;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: normal;
   background-color: rgb(39, 39, 39);
   margin-bottom: 24px;
   color: #ffffff;
+  letter-spacing: 0.1em;
   text-align: center;
-  line-height: 40px;
+  margin-bottom: 40px;
 }
 .login .login__input button:hover {
   background-color: rgb(79, 79, 79);
+}
+.login .login__input hr {
+  width: 324px;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+  border: none;
+}
+.login .login__input .login__other {
+  padding: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 324px;
+}
+.login .login__input .login__other a {
+  font-family: "Ambit", "Inter", sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  color: rgb(39, 39, 39);
+  text-decoration: none;
+}
+.login .login__input .login__other a:hover {
+  text-decoration: underline;
+}
+.login .login__img {
+  flex: 1;
+  height: calc(100% - 30px);
+  margin-right: 15px;
+  background-image: url(../img/logo.png);
+  background-position: center;
+  background-size: cover;
+  border-radius: 24px;
 }
 
 /*# sourceMappingURL=login.css.map */

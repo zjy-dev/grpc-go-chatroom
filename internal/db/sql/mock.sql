@@ -1,5 +1,5 @@
 INSERT INTO
-    chat_messages (user_id, username, message)
+    messages (user_id, username, message)
 VALUES (
         1,
         'Alice',
@@ -30,3 +30,4 @@ VALUES (
         'Charlie',
         'Cool, let me know if you need help.'
     );
+

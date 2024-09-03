@@ -4,18 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/go-sql-driver/mysql"
 )
 
 // MustConnect initialize and return a new database connection
-func MustConnect(host string, port int64, dbName string) *sql.DB {
+func MustConnect(dbUser, dbPass, host string, port uint64, dbName string) *sql.DB {
 	// Capture connection properties.
 	cfg := mysql.NewConfig()
 	cfg.Net = "tcp"
-	cfg.User = os.Getenv("DBUSER")
-	cfg.Passwd = os.Getenv("DBPASS")
+	cfg.User = dbUser
+	cfg.Passwd = dbPass
 	cfg.DBName = dbName
 	cfg.Addr = fmt.Sprintf("%s:%d", host, port)
 

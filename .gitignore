@@ -38,3 +38,8 @@ prompt/
 
 # Coverage report file
 coverage.html
+
+# Text files
+*.txt
+
+README.Docker.md

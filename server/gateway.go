@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	pb "github.com/zjy-dev/grpc-go-chatroom/api/chat/v1"
+	"github.com/zjy-dev/grpc-go-chatroom/internal/config"
 )
 
 func cors(next http.Handler) http.Handler {
@@ -34,7 +35,7 @@ func gatewayMux() http.Handler {
 	// Note: Make sure the gRPC server is running properly and accessible
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	err := pb.RegisterChatServiceHandlerFromEndpoint(context.Background(), mux, fmt.Sprintf("localhost:%d", port), opts)
+	err := pb.RegisterChatServiceHandlerFromEndpoint(context.Background(), mux, fmt.Sprintf("localhost:%d", config.Server.Port), opts)
 	if err != nil {
 		log.Fatalf("failed to register gateway: %v", err)
 	}

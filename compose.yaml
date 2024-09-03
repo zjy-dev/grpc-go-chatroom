@@ -15,37 +15,36 @@ services:
     ports:
       - 8082:8082
     environment:
-      - JWT_KEY=${JWT_KEY:?JWT_KEY must be set}
-# The commented out section below is an example of how to define a PostgreSQL
-# database that your application can use. `depends_on` tells Docker Compose to
-# start the database before your application. The `db-data` volume persists the
-# database data between container restarts. The `db-password` secret is used
-# to set the database password. You must create `db/password.txt` and add
-# a password of your choosing to it before running `docker compose up`.
-#     depends_on:
-#       db:
-#         condition: service_healthy
-#   db:
-#     image: postgres
-#     restart: always
-#     user: postgres
-#     secrets:
-#       - db-password
-#     volumes:
-#       - db-data:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_DB=example
-#       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-#     expose:
-#       - 5432
-#     healthcheck:
-#       test: [ "CMD", "pg_isready" ]
-#       interval: 10s
-#       timeout: 5s
-#       retries: 5
-# volumes:
-#   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt
-
+      - GRPC_GO_CHATROOM_DBHOST=${GRPC_GO_CHATROOM_DBHOST:?DBHOST must be set}
+      - GRPC_GO_CHATROOM_DBPORT=${GRPC_GO_CHATROOM_DBPORT:?DBPORT must be set}
+      - GRPC_GO_CHATROOM_DBNAME=${GRPC_GO_CHATROOM_DBNAME:?DBNAME must be set}
+      - GRPC_GO_CHATROOM_DBUSER=${GRPC_GO_CHATROOM_DBUSER:?DBUSER must be set}
+    secrets:
+      - jwt-key
+      - db-password
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql
+    restart: always
+    user: root
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=example
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  db-data:
+secrets:
+  db-password:
+    environment: GRPC_GO_CHATROOM_DBPASS
+  jwt-key:
+    environment: GRPC_GO_CHATROOM_JWT_KEY
