@@ -1,3 +1,4 @@
+include test.env
 -include .env
 
 BINART_PATH	:= ./bin
