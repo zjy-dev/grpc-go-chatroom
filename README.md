@@ -9,11 +9,11 @@
 <h1 align="center">Grpc Go Chatroom</h1>
 
 <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/zjy-dev/grpc-go-chatroom?color=56BEB8">
+   <!-- <img alt="Github top language" src="https://img.shields.io/github/languages/top/zjy-dev/grpc-go-chatroom?color=56BEB8"> -->
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/zjy-dev/grpc-go-chatroom?color=56BEB8">
+   <!-- <img alt="Github language count" src="https://img.shields.io/github/languages/count/zjy-dev/grpc-go-chatroom?color=56BEB8"> -->
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/zjy-dev/grpc-go-chatroom?color=56BEB8">
+   <!-- <img alt="Repository size" src="https://img.shields.io/github/repo-size/zjy-dev/grpc-go-chatroom?color=56BEB8"> -->
 
   <img alt="License" src="https://img.shields.io/github/license/zjy-dev/grpc-go-chatroom?color=56BEB8">
 
